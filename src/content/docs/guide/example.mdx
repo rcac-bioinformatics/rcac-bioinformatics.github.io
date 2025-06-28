@@ -1,0 +1,226 @@
+---
+title: Example Guide
+description: A guide in my new Starlight docs site.
+lastUpdated: 2025-05-22
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 4
+sidebar:
+  badge:
+    text: Experimental
+    variant: caution
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
+
+
+
+Guides lead a user through a specific task they want to accomplish, often with a sequence of steps.
+Writing a good guide requires thinking about what your users are trying to do.
+
+## Further reading
+
+- Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
+
+
+
+:::tip[Did you know?]
+Astro helps you build faster websites with [“Islands Architecture”](https://docs.astro.build/en/concepts/islands/).
+:::
+
+:::caution
+If you are not sure you want an awesome docs site, think twice before using [Starlight](/).
+:::
+
+:::danger
+Your users may be more productive and find your product easier to use thanks to helpful Starlight features.
+
+- Clear navigation
+- User-configurable colour theme
+- [i18n support](/guides/i18n/)
+
+:::
+
+### Heading level 3
+
+```js
+// Javascript code with syntax highlighting.
+var fun = function lang(l) {
+  dateformat.i18n = require('./lang/' + l);
+  return true;
+};
+```
+
+line highlighted
+
+```js {2-3}
+function demo() {
+  // This line (#2) and the next one are highlighted
+  return 'This is line #3 of this snippet';
+}
+```
+
+or block highlighted
+
+```js "Individual terms" /Even.*supported/
+// Individual terms can be highlighted, too
+function demo() {
+  return 'Even regular expressions are supported';
+}
+```
+
+colored
+
+
+```js "return true;" ins="inserted" del="deleted"
+function demo() {
+  console.log('These are inserted and deleted marker types');
+  // The return statement uses the default marker type
+  return true;
+}
+```
+
+
+diff like syntax highlighting
+
+```diff lang="js"
+  function thisIsJavaScript() {
+    // This entire block gets highlighted as JavaScript,
+    // and we can still add diff markers to it!
+-   console.log('Old code to be removed')
++   console.log('New and shiny code!')
+  }
+```
+
+title code block
+
+```bash title="Installing dependencies…"
+npm install
+```
+
+or filename
+
+```bash title="hellworld.sh" 
+echo "Hello, world!"
+```
+
+```bash frame="none"
+echo "This code block has no frame"
+```
+
+Details (also known as “disclosures” or “accordions”) 
+
+
+<details>
+<summary>Where and when is the Andromeda constellation most visible?</summary>
+
+The [Andromeda constellation](<https://en.wikipedia.org/wiki/Andromeda_(constellation)>) is most visible in the night sky during the month of November at latitudes between `+90°` and `−40°`.
+
+</details>
+
+#### Heading level 4
+
+
+### Heading level 3
+
+
+## Heading level 2
+
+
+## Tabs Demo
+
+<Tabs>
+  <TabItem label="Stars">Sirius, Vega, Betelgeuse</TabItem>
+  <TabItem label="Moons">Io, Europa, Ganymede</TabItem>
+</Tabs>
+
+<Tabs>
+  <TabItem label="Case 1">
+  Sirius, Vega, Betelgeuse
+  </TabItem>
+  <TabItem label="Case 2">
+  Io, Europa, Ganymede
+  </TabItem>
+  <TabItem label="Case 3">
+  Io, Europa, Ganymede
+  </TabItem>
+  <TabItem label="Case 4">
+  Io, Europa, Ganymede
+  </TabItem>
+  <TabItem label="Case 5">
+  Io, Europa, Ganymede
+  </TabItem>
+  <TabItem label="Case 6">
+  Io, Europa, Ganymede
+  </TabItem>
+  <TabItem label="Case 7">
+  Io, Europa, Ganymede
+  </TabItem>
+  <TabItem label="Case 8">
+  Io, Europa, Ganymede
+  </TabItem>
+</Tabs>
+
+
+
+
+<Steps>
+
+1. Import the component into your MDX file:
+
+   ```js
+   import { Steps } from '@astrojs/starlight/components';
+   ```
+
+2. Wrap `<Steps>` around your ordered list items.
+
+</Steps>
+
+
+
+
+<FileTree>
+
+- astro.config.mjs
+- package.json
+- src
+  - components
+    - Header.astro
+    - Title.astro
+  - pages/
+
+</FileTree>
+
+
+
+import { Code } from '@astrojs/starlight/components';
+
+export const exampleCode = `console.log('This could come from a file or CMS!');`;
+export const fileName = 'example.js';
+export const highlights = ['file', 'CMS'];
+
+<Code code={exampleCode} lang="js" title={fileName} mark={highlights} />
+
+
+
+
+| Assembly                               | hap1.p_ctg | hap2.p_ctg |
+|:---------------------------------------|------------:|------------:|
+| # contigs (>= 0 bp)                   |         702 |         291 |
+| # contigs (>= 10000 bp)               |         701 |         291 |
+| # contigs (>= 25000 bp)               |         654 |         287 |
+| # contigs (>= 50000 bp)               |         311 |         213 |
+| Total length (>= 0 bp) (mb)           |     2,164.74 |    2,164.57 |
+| Total length (>= 10000 bp) (mb)       |     2,164.73 |    2,164.57 |
+| Total length (>= 25000 bp) (mb)       |     2,163.73 |    2,164.49 |
+| Total length (>= 50000 bp) (mb)       |     2,151.27 |    2,161.38 |
+| # contigs                              |         702 |         291 |
+| Largest contig (mb)                   |     230.90 |     229.69 |
+| Total length (mb)                     |     2,164.74 |    2,164.57 |
+| N50 (mb)                               |     152.60 |     131.66 |
+| N90 (mb)                               |       9.46 |      17.33 |
+| auN (mb)                               |     119.19 |    128.48 |
+| L50                                    |          6 |          6 |
+| L90                                    |         30 |         23 |
+| # N's per 100 kbp                     |          0 |          0 |

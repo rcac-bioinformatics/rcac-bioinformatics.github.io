@@ -1,36 +1,15 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+title: RCAC Bioinformatics Tutorials
+description: Learn more about my project in this docs site built with Starlight.
+banner:
+  content: |
+    We just launched something cool!
+    <a href="https://example.com">Check it out</a>
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+This is a collection of tutorials for bioinformatics tools and workflows available at the Rosen Center for Advanced Computing (RCAC). It provides detailed instructions, best practices, and support materials to help users effectively utilize RCAC's computational resources for bioinformatics research. The documentation covers topics such as high-performance computing, data analysis pipelines for genomics and proteomics, software usage, and troubleshooting. Whether you are new to bioinformatics or an advanced user, this site offers valuable guidance for maximizing the efficiency of your bioinformatics projects.
 
-## Next steps
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+import { Card } from '@astrojs/starlight/components';
+
+<Card title="Check this out">Interesting content you want to highlight.</Card>

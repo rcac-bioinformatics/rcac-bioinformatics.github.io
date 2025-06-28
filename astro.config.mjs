@@ -1,26 +1,93 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import starlightLinksValidator from 'starlight-links-validator';
 import starlight from '@astrojs/starlight';
 
-// https://astro.build/config
+
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
-			],
-		}),
-	],
+    site: "https://rcac-bioinformatics.github.io",
+    integrations: [
+        starlight({
+            plugins: [
+                starlightLinksValidator(),
+            ],
+            title: 'RCAC bioinformatics',
+            customCss: [
+                './src/styles/custom.css',
+            ],
+            favicon: './src/assets/favicon-96x96.png',
+            head: [
+                {
+                    tag: 'script',
+                    attrs: {
+                        src: 'https://plausible.io/js/script.js',
+                        defer: true,
+                        'data-domain': 'docs.atuin.sh',
+                    }
+                }
+            ],
+            logo: {
+                light: './src/assets/logo-light.png',
+                dark: './src/assets/logo-dark.png',
+                replacesTitle: true,
+            },
+            social: [
+                {
+                    icon: 'github',
+                    label: 'GitHub',
+                    href: 'https://github.com/aseetharam/rcac-bioinformatics'
+                },
+                {
+                    icon: 'discord',
+                    label: 'Discord',
+                    href: 'https://discord.gg/zEF2nzhXdC'
+                },
+                {
+                    icon: 'blueSky',
+                    label: 'BlueSky',
+                    href: 'https://bsky.app/profile/rcac-bioinfo.bsky.social'
+                },
+            ],
+            defaultLocale: "root",
+            locales: {
+                root: { label: "English", lang: "en" }
+            },
+            sidebar: [
+                {
+                    label: 'Guide',
+                    items: [
+                        { label: 'Test page', link: '/guide/example' },
+                        { label: 'Installing R packages', link: '/guide/r-packages' },
+                        { label: 'Transfer data with iRODS', link: 'guide/icommands' },
+                        { label: 'Optimizing Trinity', link: '/guide/trinity' },
+                        { label: 'VISPR visualization', link: '/guide/vispr' },
+                    ],
+                },
+                {
+                    label: 'Tutorials',
+                    items: [
+
+                        { label: 'Juicer on Negishi cluster', link: '/tutorials/juicer' },
+                        { label: 'Assemble mitochondrial genomes ', link: '/tutorials/mitohifi' },
+                        {
+                            label: 'Gene prediction',
+                            items: [
+                                { label: 'BRAKER3', link: '/tutorials/braker' },
+                                { label: 'GeMoMa - merge annotations', link: '/tutorials/gemoma' },
+                                { label: 'Helixer', link: '/tutorials/helixer' },
+                            ],
+                        },
+                        {
+                            label: 'Genome assembly',
+                            items: [
+                                { label: 'HiFiasm', link: '/tutorials/hifi_assembly' },
+                            ],
+                        },
+                    ],
+                },
+                { label: 'Known issues', link: '/known-issues' },
+                { label: 'Integrations', link: '/integrations' },
+                { label: 'FAQ', link: '/faq' },
+            ],
+        }),
+    ],
 });
