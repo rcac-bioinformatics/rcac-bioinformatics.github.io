@@ -327,7 +327,7 @@ featureCounts \
 
 </Tabs>
 
-The code used for parsing `featureCounts` summary files and generating the plots can be found here: [`parse_subreads.R`](assets/scripts/parse_subreads.R)
+The code used for parsing `featureCounts` summary files and generating the plots can be found here: [`parse_subreads.R`](/src/content/docs/guide/assets/scripts/parse_subreads.R)
 
 <Aside type="note">
 The slightly higher assignment rate for Helixer predictions suggests that the predictions are capturing more coding regions of the genome. Similarly, lower unassigned reads indicate Helixer predictions have better accuracy than current annotations. For differential gene expression studies, higher assignment rates are desirable as they indicate more accurate gene models.
@@ -384,7 +384,7 @@ done
 
 </Tabs>
 
-The code used for parsing EnTAP's `entap_results.tsv` files and generating the plots can be found here: [`parse_subreads.R`](assets/scripts/entap_results_plot.R)
+The code used for parsing EnTAP's `entap_results.tsv` files and generating the plots can be found here: [`parse_subreads.R`](/src/content/docs/guide/assets/scripts/entap_results_plot.R)
 
 <Aside type="note">
 The functional annotation results show that the Helixer predictions have higher proportion of genes with functional annotations compared to the reference annotations. Predictions with similairty to existing sequences in the databases are likely to be more accurate than those without any similarity.
@@ -415,7 +415,7 @@ Phylostrata analysis can be used to determine the evolutionary age of the predic
 
 </Tabs>
 
-The code used for parsing phylostrata analyses ([`phylostrata_run.R`](assets/scripts/phylostrata_run.R)) and for plotting results ([`phylostrata_plot.R`](assets/scripts/phylostrata_plot.R)) are provided in the repository.
+The code used for parsing phylostrata analyses ([`phylostrata_run.R`](/src/content/docs/guide/assets/scripts/phylostrata_run.R)) and for plotting results ([`phylostrata_plot.R`](/src/content/docs/guide/assets/scripts/phylostrata_plot.R)) are provided in the repository.
 
 <Aside type="note">
 The higher proportion of genes in deeply conserved phylostrata (e.g., cellular organisms and eukaryota) underscores Helixer's strength in accurately identifying core, evolutionarily conserved genes. This alignment with conserved regions can be interpreted as strong evidence of the model’s reliability in identifying well-established gene structures.
@@ -547,7 +547,7 @@ for f in *_cds.fa; do
 done
 ```
 
-The plots were generated using the following R script: [`cds_assesment.R`](assets/scripts/cds_assesment.R)
+The plots were generated using the following R script: [`cds_assesment.R`](/src/content/docs/guide/assets/scripts/cds_assesment.R)
 
 <Tabs>
 
