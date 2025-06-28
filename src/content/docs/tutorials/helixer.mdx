@@ -217,7 +217,7 @@ Once the BUSCO profiling is done, the results can be compared.
 or visualized as a stacked bar plot:
 
 
-![Busco results](assets/figures/busco_figure.png)
+![Busco results](public/assets/figures/busco_figure.png)
 
 **Figure 1: BUSCO results for Helixer, B73.v5 (MaizeGDB) and B73.v5 (Reference) annotations.**
 
@@ -310,7 +310,7 @@ featureCounts \
 
   <TabItem label="Assigned Features">
 
-![assigned](assets/figures/assigned.png)
+![assigned](public/assets/figures/assigned.png)
 
 **Figure 2: Feature assignment for B73.v5 and Helixer predictions. The reads assigned to helixer features are higher across tissues as compared to NAM.v5 annotations.**
 
@@ -319,7 +319,7 @@ featureCounts \
   <TabItem label="Unassigned Features">
 
 
-![unassigned](assets/figures/unassigned.png)
+![unassigned](public/assets/figures/unassigned.png)
 
 **Figure 3: Feature assignment for B73.v5 and Helixer predictions. The unassigned reads are higher for NAM.v5 annotations across tissues.**
 
@@ -327,7 +327,7 @@ featureCounts \
 
 </Tabs>
 
-The code used for parsing `featureCounts` summary files and generating the plots can be found here: [`parse_subreads.R`](/src/content/docs/guide/assets/scripts/parse_subreads.R)
+The code used for parsing `featureCounts` summary files and generating the plots can be found here: [`parse_subreads.R`](public/assets/scripts/parse_subreads.R)
 
 <Aside type="note">
 The slightly higher assignment rate for Helixer predictions suggests that the predictions are capturing more coding regions of the genome. Similarly, lower unassigned reads indicate Helixer predictions have better accuracy than current annotations. For differential gene expression studies, higher assignment rates are desirable as they indicate more accurate gene models.
@@ -358,7 +358,7 @@ done
 
   <TabItem label="Percent identity">
 
-![pid](assets/figures/pid.png)
+![pid](public/assets/figures/pid.png)
 
 **Figure 4: Percent identity of each predicted gene to the reference databases sequences (one hit per query).**
 
@@ -367,7 +367,7 @@ done
   <TabItem label="Coding frame with gene function">
 
 
-![genefunction](assets/figures/gene-function.png)
+![genefunction](public/assets/figures/gene-function.png)
 
 **Figure 5: Distribution of frame completeness with presence of gene function across predictions**
 
@@ -376,7 +376,7 @@ done
   <TabItem label="Coding frame with pfam domain">
 
 
-![pfamdomain](assets/figures/pfam-domain.png)
+![pfamdomain](public/assets/figures/pfam-domain.png)
 
 **Figure 5: Distribution of frame completeness with presence of pfam domains across predictions**
    </TabItem>
@@ -384,7 +384,7 @@ done
 
 </Tabs>
 
-The code used for parsing EnTAP's `entap_results.tsv` files and generating the plots can be found here: [`parse_subreads.R`](/src/content/docs/guide/assets/scripts/entap_results_plot.R)
+The code used for parsing EnTAP's `entap_results.tsv` files and generating the plots can be found here: [`parse_subreads.R`](public/assets/scripts/entap_results_plot.R)
 
 <Aside type="note">
 The functional annotation results show that the Helixer predictions have higher proportion of genes with functional annotations compared to the reference annotations. Predictions with similairty to existing sequences in the databases are likely to be more accurate than those without any similarity.
@@ -398,7 +398,7 @@ Phylostrata analysis can be used to determine the evolutionary age of the predic
 
   <TabItem label="counts">
 
-![ps_count](assets/figures/ps_counts.png)
+![ps_count](public/assets/figures/ps_counts.png)
 
 **Figure 6: Genes in each starta for the predictions (count)**
 
@@ -407,7 +407,7 @@ Phylostrata analysis can be used to determine the evolutionary age of the predic
   <TabItem label="percent">
 
 
-![ps_percent](assets/figures/ps_percent.png)
+![ps_percent](public/assets/figures/ps_percent.png)
 
 **Figure 7: Genes in each starta for the predictions (percent)**
 
@@ -415,7 +415,7 @@ Phylostrata analysis can be used to determine the evolutionary age of the predic
 
 </Tabs>
 
-The code used for parsing phylostrata analyses ([`phylostrata_run.R`](/src/content/docs/guide/assets/scripts/phylostrata_run.R)) and for plotting results ([`phylostrata_plot.R`](/src/content/docs/guide/assets/scripts/phylostrata_plot.R)) are provided in the repository.
+The code used for parsing phylostrata analyses ([`phylostrata_run.R`](public/assets/scripts/phylostrata_run.R)) and for plotting results ([`phylostrata_plot.R`](public/assets/scripts/phylostrata_plot.R)) are provided in the repository.
 
 <Aside type="note">
 The higher proportion of genes in deeply conserved phylostrata (e.g., cellular organisms and eukaryota) underscores Helixer's strength in accurately identifying core, evolutionarily conserved genes. This alignment with conserved regions can be interpreted as strong evidence of the model’s reliability in identifying well-established gene structures.
@@ -547,13 +547,13 @@ for f in *_cds.fa; do
 done
 ```
 
-The plots were generated using the following R script: [`cds_assesment.R`](/src/content/docs/guide/assets/scripts/cds_assesment.R)
+The plots were generated using the following R script: [`cds_assesment.R`](public/assets/scripts/cds_assesment.R)
 
 <Tabs>
 
   <TabItem label="CDS length">
 
-![cds length](assets/figures/cds-length.png)
+![cds length](public/assets/figures/cds-length.png)
 
 Figure 8: Distribution of CDS length for Helixer and NAM.v5 predictions. The Helixer predictions have a lower proportion of shorter CDS lengths compared to NAM.v5 annotations.
 
@@ -562,7 +562,7 @@ Figure 8: Distribution of CDS length for Helixer and NAM.v5 predictions. The Hel
 
   <TabItem label="GC content">
 
-![GC content](assets/figures/gc-content.png)
+![GC content](public/assets/figures/gc-content.png)
 
 Figure 9: Distribution of GC content for Helixer and NAM.v5 predictions. Both predictions have a classic dual GC peak typical to grasses.
 
@@ -571,7 +571,7 @@ Figure 9: Distribution of GC content for Helixer and NAM.v5 predictions. Both pr
 
   <TabItem label="Codon type">
 
-![codon type](assets/figures/codon-type.png)
+![codon type](public/assets/figures/codon-type.png)
 
 Figure 10: Distribution of start and stop codons for Helixer and NAM.v5 predictions. The Helixer predictions have a higher proportion of valid start and stop codons.
 
