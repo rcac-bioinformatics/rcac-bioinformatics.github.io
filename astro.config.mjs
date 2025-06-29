@@ -11,6 +11,9 @@ export default defineConfig({
                 starlightLinksValidator(),
             ],
             title: 'RCAC bioinformatics',
+            editLink: {
+                baseUrl: 'https://github.com/rcac-bioinformatics/rcac-bioinformatics.github.io/edit/main/',
+              },
             customCss: [
                 './src/styles/custom.css',
             ],
