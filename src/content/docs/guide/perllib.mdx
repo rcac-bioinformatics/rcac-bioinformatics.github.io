@@ -28,6 +28,7 @@ This is ideal for environments where you cannot modify system Perl without root 
 
     You can substitute this path to any location you want (`~` or even `$SCRATCH`) .
 
+
 2. **Set up the environment to install Perl modules locally:**
 
     ```bash frame="none"
@@ -50,8 +51,16 @@ This is ideal for environments where you cannot modify system Perl without root 
     source /depot/gcore/localperl/env.sh
     ```
 
+    <Aside type="note">
+    You can check which Perl is in use and where it looks for libraries by running `which perl` and `perl -V` commands
+    Make sure it points to `/usr/bin/perl` and includes `/depot/gcore/localperl/lib/perl5` in `@INC` after activating your environment.
+    </Aside>
 
 3. **Install `cpanm` (Perl module installer) into the custom location:**
+
+    <Aside type="caution">
+    Make sure you've already run `source /depot/gcore/localperl/env.sh` before installing modules with `cpanm`, or they will be installed in the wrong location.
+    </Aside>
 
     ```bash frame="none"
     curl -L https://cpanmin.us | perl - --local-lib=/depot/gcore/localperl App::cpanminus
@@ -75,11 +84,17 @@ This is ideal for environments where you cannot modify system Perl without root 
     You can add more modules as needed.
 
 
-6. **(Optional) Automatically load your environment in future sessions:**
+5. **(Optional) Automatically load your environment in future sessions:**
 
     ```bash frame="none"
     echo 'source /depot/gcore/localperl/env.sh' >> ~/.bashrc
     ```
+
+    If you prefer not to modify your `~/.bashrc`, you can manually source the environment script each time you start a new session.
+
+    <Aside type="caution">
+    Remember to run `source /depot/gcore/localperl/env.sh` in any new shell before running scripts that depend on these local modules.
+    </Aside>
 
 </Steps>
 
@@ -104,3 +119,19 @@ perl test_perl_modules.pl
 ```
 If you see the message "Local Perl modules are working!", your installation is successful.
 
+
+## FAQs
+
+<details>
+<summary>1. How can I get a list of all installed `perl` modules? [click to see answer]</summary>
+
+You can use the following command to list all installed Perl modules:
+
+```bash frame="none"
+perldoc perllocal
+```
+or
+```bash frame="none"
+find /depot/gcore/localperl/lib/perl5 -name '*.pm'
+```
+</details>
