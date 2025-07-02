@@ -1,0 +1,106 @@
+---
+title: Install perl libraries
+description: A guide in my new Starlight docs site.
+lastUpdated: 2025-07-02
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 4
+---
+import { Aside } from '@astrojs/starlight/components';
+import { Card } from '@astrojs/starlight/components';
+import { Code } from 'astro-expressive-code/components'
+import { Steps } from '@astrojs/starlight/components';
+
+This guide explains how to install Perl modules in a non-system location (e.g., project or group directory) using `cpanm` and `local::lib`.
+This is ideal for environments where you cannot modify system Perl without root access, such as on RCAC clusters (Gautschi, Negishi, Bell).
+
+
+
+
+<Steps>
+
+1. **Create the required directory in your desired location (e.g., home or project space).**
+
+    ```bash frame="none"
+    mkdir -p /depot/gcore/localperl
+    cd /depot/gcore/localperl
+    ```
+
+    You can substitute this path to any location you want (`~` or even `$SCRATCH`) .
+
+2. **Set up the environment to install Perl modules locally:**
+
+    ```bash frame="none"
+    nano /depot/gcore/localperl/env.sh
+    ```
+
+    Paste the following into `env.sh`:
+
+    ```bash title="env.sh"
+    export PERL_LOCAL_LIB_ROOT=/depot/gcore/localperl
+    export PERL_MB_OPT="--install_base /depot/gcore/localperl"
+    export PERL_MM_OPT="INSTALL_BASE=/depot/gcore/localperl"
+    export PERL5LIB=/depot/gcore/localperl/lib/perl5:$PERL5LIB
+    export PATH=/depot/gcore/localperl/bin:$PATH
+    ```
+
+    Then activate it:
+
+    ```bash frame="none"
+    source /depot/gcore/localperl/env.sh
+    ```
+
+
+3. **Install `cpanm` (Perl module installer) into the custom location:**
+
+    ```bash frame="none"
+    curl -L https://cpanmin.us | perl - --local-lib=/depot/gcore/localperl App::cpanminus
+    ```
+
+    Confirm that it worked:
+
+    ```bash frame="none"
+    which cpanm
+    # should return: /depot/gcore/localperl/bin/cpanm
+    ```
+
+
+4. **Install the required Perl modules:**
+
+    ```bash frame="none"
+    cpanm DateTime namespace::autoclean Sub::Name \
+          JSON Getopt::Long Pod::Usage JSON::XS Mojolicious
+    ```
+
+    You can add more modules as needed.
+
+
+6. **(Optional) Automatically load your environment in future sessions:**
+
+    ```bash frame="none"
+    echo 'source /depot/gcore/localperl/env.sh' >> ~/.bashrc
+    ```
+
+</Steps>
+
+
+## Testing the installation
+
+To verify that the installation was successful, you can run a simple Perl script that uses one of the installed modules:
+
+```perl title="test_perl_modules.pl"
+#!/usr/bin/perl
+use strict;
+use warnings;
+use DateTime;
+use JSON;
+
+print "Local Perl modules are working!\n";
+```
+Run the script:
+
+```bash frame="none"
+perl test_perl_modules.pl
+```
+If you see the message "Local Perl modules are working!", your installation is successful.
+
