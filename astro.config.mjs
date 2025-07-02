@@ -58,8 +58,8 @@ export default defineConfig({
                 {
                     label: 'Guide',
                     items: [
-                        { label: 'Test page', link: '/guide/example' },
                         { label: 'Installing R packages', link: '/guide/r-packages' },
+                        { label: 'Installing Perl packages', link: '/guide/perllib' },
                         { label: 'Transfer data with iRODS', link: 'guide/icommands' },
                         { label: 'Optimizing Trinity', link: '/guide/trinity' },
                         { label: 'VISPR visualization', link: '/guide/vispr' },
