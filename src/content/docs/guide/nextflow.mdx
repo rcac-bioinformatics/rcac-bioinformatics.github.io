@@ -1,0 +1,95 @@
+---
+title: Installing Nextflow locally
+description: A guide to install Nextflow on your local machine.
+lastUpdated: 2025-07-03
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 4
+---
+
+import { FileTree, Aside, Card, CardGrid, Steps, Icon, Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from 'astro-expressive-code/components'
+
+
+Nextflow is a powerful workflow management system that simplifies the process of writing and executing complex data analysis pipelines.
+This guide will help you install Nextflow on any of the RCAC clusters, enabling you to run bioinformatics workflows efficiently.
+
+
+## Installation steps
+
+<Steps>
+
+1. **Check `java` version**
+
+   ```bash frame="none"
+   module --force purge
+   module load openjdk
+   java -version
+   ```
+
+   Ensure you have Java 17 or later installed. If not, follow guide to install Java.
+
+2. **Install Nextflow**
+
+    ```bash frame="none"
+    cd ~
+    curl -s https://get.nextflow.io | bash
+    ```
+
+    This command installs Nextflow in your current directory.
+
+3. **Make Nextflow executable and add it to your PATH**
+
+    ```bash frame="none"
+    chmod +x nextflow
+    mv nextflow ~/bin/
+    echo 'export PATH=$PATH:~/bin' >> ~/.bashrc
+    source ~/.bashrc
+    ```
+    This makes `nextflow` accessible from anywhere in your terminal.
+
+4. **Verify Nextflow installation**
+
+    ```bash frame="none"
+    nextflow -version
+    ```
+
+</Steps>
+
+
+<Aside type="tip">
+To update Nextflow in the future, you can run `nextflow self-update` in your terminal.
+</Aside>
+
+
+## FAQs
+
+<details>
+<summary>1. What to do when `java` is not available? [click to expand]</summary>
+
+If `java` version you need is not available, you can install it using the following steps:
+<Steps>
+1. **Install SDKMAN**
+
+   ```bash frame="none"
+   cd $HOME
+   curl -s https://get.sdkman.io | bash
+   ```
+2. **Load SDKMAN**
+
+   ```bash frame="none"
+   source "$HOME/.sdkman/bin/sdkman-init.sh"
+   ``` 
+3. **Install Java 17**
+
+   ```bash frame="none"
+   sdk install java 17.0.8-tem
+   ```
+
+4. **Verify Java installation**
+
+    ```bash frame="none"
+    java -version
+    ```
+</Steps>
+</details>
