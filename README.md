@@ -1,54 +1,77 @@
-# Starlight Starter Kit: Basics
+# RCAC Bioinformatics Wiki
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-```
-npm create astro@latest -- --template starlight
-```
+This site provides documentation, tutorials, and workflow guides for bioinformatics tools and analyses on Purdue’s Research Computing infrastructure, maintained by the **RCAC Bioinformatics** team.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/starlight/tree/main/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/starlight/tree/main/examples/basics)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/withastro/starlight&create_from_path=examples/basics)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwithastro%2Fstarlight%2Ftree%2Fmain%2Fexamples%2Fbasics&project-name=my-starlight-docs&repository-name=my-starlight-docs)
+📚 [View the live site](https://rcac-bioinformatics.github.io/)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+## 🔬 Purpose
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+This site helps researchers, students, and staff:
 
-```
+* Learn how to run bioinformatics tools on RCAC clusters (Bell, Negishi, Gilbreth, Gautschi, etc.)
+* Access best practices and reproducible workflows (e.g., RNA-seq, genome assembly, variant calling)
+* Get started with RCAC-supported containers, modules, and job scripts
+* Troubleshoot common issues with software and data pipelines
+
+---
+
+## 📁 Project Structure
+
+```text
 .
-├── public/
+├── public/                  # Static assets (favicons, robots.txt, etc.)
 ├── src/
-│   ├── assets/
+│   ├── assets/              # Images, diagrams, and logos
 │   ├── content/
-│   │   ├── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+│   │   └── docs/            # All Markdown/MDX documentation files
+│   └── content.config.ts    # Sidebar/nav configuration
+├── astro.config.mjs         # Astro project config
+├── package.json             # NPM scripts and dependencies
+├── tsconfig.json            # TypeScript settings
+└── README.md                # You are here
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+All documentation lives under `src/content/docs/`. The site is built using [Astro Starlight](https://starlight.astro.build), a fast static site generator optimized for technical documentation.
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+---
 
-Static assets, like favicons, can be placed in the `public/` directory.
+## 🧪 Local Development
 
-## 🧞 Commands
+To work on this documentation site locally:
 
-All commands are run from the root of the project, from a terminal:
+```bash
+npm install         # Install dependencies
+npm run dev         # Start local dev server (http://localhost:4321)
+npm run build       # Build for production (output to ./dist)
+npm run preview     # Preview production build
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
+## 🤝 Contributing
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+If you'd like to contribute:
+
+* Fork the repo and clone it
+* Create or edit `.mdx` files under `src/content/docs/`
+* Submit a pull request with a clear description of changes
+
+Contributions can include:
+
+* New tutorials or walkthroughs
+* Corrections or updates to existing docs
+* Tips for common pitfalls on RCAC clusters
+
+---
+
+## 📎 Related Links
+
+* 🛰 [RCAC Homepage](https://www.rcac.purdue.edu)
+* 🧬 [RCAC Bioinformatics GitHub Pages](https://rcac-bioinformatics.github.io/)
+* 💬 [Purdue RCD Discord](https://discord.gg/5w7PcfhX)
+
+---
