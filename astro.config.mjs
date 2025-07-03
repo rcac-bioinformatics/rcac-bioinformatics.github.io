@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlight from '@astrojs/starlight';
-
+const googleAnalyticsId = 'G-FPWQ35ME85';
 
 export default defineConfig({
     site: "https://rcac-bioinformatics.github.io",
@@ -28,6 +28,25 @@ export default defineConfig({
                     }
                 }
             ],
+            head: [
+                // Adding google analytics
+                {
+                    tag: 'script',
+                    attrs: {
+                        src: `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`,
+                    },
+                },
+                {
+                    tag: 'script',
+                    content: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+        
+                  gtag('config', '${googleAnalyticsId}');
+                  `,
+                },
+              ],
             logo: {
                 light: './src/assets/logo-light.png',
                 dark: './src/assets/logo-dark.png',
