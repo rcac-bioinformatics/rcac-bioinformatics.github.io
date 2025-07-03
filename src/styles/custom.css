@@ -3,4 +3,15 @@
 	--sl-text-5xl: 2.5rem;
 	--sl-color-accent-high: hsl(40, 47%, 69%);
 	--sl-color-accent: hsl(40, 47%, 69%);
-	--sl-color-accent-low: hsl(0, 0%, 0%)}
+	--sl-color-accent-low: hsl(0, 0%, 0%);
+/*
+	h1 {
+		color: #8e6f3e;
+	};
+	h2 {
+		color: #8e6f3e;
+	};
+	h3 {
+		color: #8e6f3e;
+	};
+*/
