@@ -7,6 +7,9 @@ export default defineConfig({
     site: "https://rcac-bioinformatics.github.io",
     integrations: [
         starlight({
+            expressiveCode: {
+                themes: ['dracula', 'light-plus'],
+              },
             plugins: [
                 starlightLinksValidator(),
             ],
@@ -73,6 +76,7 @@ export default defineConfig({
             locales: {
                 root: { label: "English", lang: "en" }
             },
+            
             sidebar: [
                 {
                     label: 'Guide',
@@ -83,6 +87,7 @@ export default defineConfig({
                         { label: 'Optimizing Trinity', link: '/guide/trinity' },
                         { label: 'VISPR visualization', link: '/guide/vispr' },
                         { label: 'Nextflow installation', link: '/guide/nextflow' },
+                        { label: 'VS Code setup', link: '/guide/vscode' },
                     ],
                 },
                 {

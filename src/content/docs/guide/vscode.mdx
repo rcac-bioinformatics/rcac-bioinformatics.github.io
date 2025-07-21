@@ -1,0 +1,104 @@
+---
+title: Using VS Code on RCAC Community Clusters
+description: Learn how to set up and use Visual Studio Code on RCAC clusters.
+lastUpdated: 2025-07-21
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 4
+---
+import { Aside, Card, CardGrid, Steps, Icon } from '@astrojs/starlight/components';
+import { Code } from 'astro-expressive-code/components'
+
+
+Visual Studio Code (VS Code) is a widely used, lightweight IDE that supports remote development via SSH.
+This makes it a convenient option for researchers less comfortable with terminal-only editors like Vim, especially when developing code or managing data on RCAC resources.
+
+
+### Steps overview
+
+<Steps>
+
+1. Install [VS Code](https://code.visualstudio.com) locally.  
+
+2. Install the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension.
+
+3. Set up SSH keys on your local machine and upload your public key to the cluster
+
+4. Modify your SSH config file (`~/.ssh/config`) to include the RCAC cluster details
+
+5. Connect to the RCAC cluster using VS Code's Remote - SSH
+</Steps>
+
+### Detailed Steps
+
+#### 1. VS Code Installation
+
+- Download the installer for your operating system from the [VS Code website](https://code.visualstudio.com).
+- Run the installer and follow the prompts to complete the installation.
+- Launch VS Code after the installation is complete.
+
+#### 2. Install Remote - SSH Extension
+
+- Open VS Code.
+- Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side.
+- Search for "Remote - SSH" in the Extensions Marketplace.
+- Click "Install" to add the extension to your VS Code setup.
+
+![VS code Remote SSH Extension](/assets/figures/vscode-extension.png)
+
+
+#### 3. Set Up SSH Keys
+
+If you haven't already set up SSH keys (check `ls ~/.ssh/id_rsa`), follow these steps (on your local machine):
+
+```bash frame="none"
+# Generate SSH keys (if you don't have them already)
+ssh-keygen -b 4096 -C "pete@purdue.edu"
+# Press Enter to accept the default file location and leave the passphrase empty for simplicity
+ssh-copy-id -i ~/.ssh/id_rsa.pub pete@gautschi.rcac.purdue.edu
+# Repeat for other clusters (negishi, bell, anvil)
+# eg., ssh-copy-id -i ~/.ssh/id_rsa.pub pete@negishi.rcac.purdue.edu
+```
+
+This should allow you to log in to the RCAC clusters without entering a password each time.
+
+#### 4. Modify SSH Config File
+
+Open your SSH config file (`~/.ssh/config`) in a text editor/VScode and add the following entries for each RCAC cluster:
+
+```bash title="~/.ssh/config"
+Host gautschi
+    HostName gautschi.rcac.purdue.edu
+    User pete
+    IdentityFile ~/.ssh/id_rsa
+Host negishi
+    HostName negishi.rcac.purdue.edu
+    User pete
+    IdentityFile ~/.ssh/id_rsa
+Host bell
+    HostName bell.rcac.purdue.edu
+    User pete
+    IdentityFile ~/.ssh/id_rsa
+```
+
+#### 5. Connect to the RCAC cluster using VS Code's Remote - SSH
+
+You can connect to the RCAC clusters using VS Code's Remote - SSH extension:
+
+**Option 1:**
+
+Click on the left bottom corner of VS Code where it says "Open a Remote Window" and select "Remote-SSH: Connect to Host...". Then choose the cluster you want to connect to (e.g., `gautschi`, `negishi`, or `bell`).
+
+![VS Code Remote SSH](/assets/figures/vscode-connect.png)
+
+**Option 2:**
+
+Open the Command Palette (Ctrl+Shift+P) and type "Remote-SSH: Connect to Host..." and select the desired RCAC cluster (e.g., gautschi, negishi, bell) from the list of configured hosts.
+
+
+**Option 3:**
+
+Click on the Remote Explorer icon in the Activity Bar on the side, then click on the "SSH Targets" section. You should see the RCAC clusters listed there. Click on the one you want to connect to.
+
+Once connected, you can open files, run commands, and manage your projects on the cluster directly from VS Code.
+
