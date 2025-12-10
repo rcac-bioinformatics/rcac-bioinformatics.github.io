@@ -1,3 +1,4 @@
+/* --- 1. GLOBAL VARIABLES --- */
 :root {
 	--sl-content-width: 55rem;
 	--sl-text-5xl: 2.5rem;
@@ -6,25 +7,63 @@
 	--sl-color-accent-low: hsl(0, 0%, 0%);
 }
 
-/* h1,
-h2,
-h3 {
-		font-family: 'Source Serif Pro', serif;
-		font-weight: 700;
-		line-height: 1.2;
-		margin-top: 1.5rem;
-		margin-bottom: 0.5rem;
-		color: #8e6f3e;
-} */
+/* --- 2. CARD GRID LAYOUT --- */
 
-/* Target the Starlight card grid class (usually .sl-card-grid or similar) */
-:root {
-	/* Starlight often uses variables you can override */
-	--sl-card-min-width: 200px !important;
-	--sl-card-min-height: 200px !important;
-}
-
-/* Fallback if variable doesn't exist in your version */
+/* FORCE 3 CARDS PER ROW on desktop */
 .sl-markdown-content .card-grid {
-	grid-template-columns: repeat(auto-fit, minmax(200px, 2fr)) !important;
+	/* 1fr 1fr 1fr = 3 equal columns. */
+	grid-template-columns: repeat(3, 1fr) !important;
 }
+
+/* Tablet: Make sure it doesn't look squished */
+@media (max-width: 800px) {
+	.sl-markdown-content .card-grid {
+		grid-template-columns: 1fr 1fr !important;
+	}
+}
+
+/* Phone: Stack them vertically */
+@media (max-width: 500px) {
+	.sl-markdown-content .card-grid {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+/* --- 3. CARD INTERNALS (Typography & Spacing) --- */
+
+/* Target the Card Container */
+.sl-markdown-content .card-grid .card {
+	padding: 1rem !important;
+	/* Reduce padding to give text more room */
+}
+
+/* Target the Title (Make it smaller/tighter) */
+.sl-markdown-content .card-grid .card .title {
+	font-size: 1rem !important;
+	line-height: 1.2 !important;
+	margin-bottom: 0.5rem !important;
+}
+
+/* Target the Body Text (Description) */
+.sl-markdown-content .card-grid .card .body {
+	font-size: 0.85rem !important;
+	line-height: 1.4 !important;
+}
+
+/* Target the Icon (Optional: Shrink it) */
+.sl-markdown-content .card-grid .card .icon {
+	font-size: 1.2rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+
+/* --- 4. TYPOGRAPHY (Commented Out) --- */
+/* h1, h2, h3 {
+    font-family: 'Source Serif Pro', serif;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #8e6f3e;
+} 
+*/
