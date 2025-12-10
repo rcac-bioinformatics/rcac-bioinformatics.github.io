@@ -88,6 +88,7 @@ export default defineConfig({
                         { label: 'VISPR visualization', link: '/guide/vispr' },
                         { label: 'Nextflow installation', link: '/guide/nextflow' },
                         { label: 'VS Code setup', link: '/guide/vscode' },
+                        { label: 'Productivity tips', link: '/guide/productivity-tips' },
                     ],
                 },
                 {
