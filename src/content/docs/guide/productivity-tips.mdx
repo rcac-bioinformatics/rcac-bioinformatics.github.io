@@ -570,7 +570,6 @@ Use this for moving project folders between your laptop and the cluster, or betw
   * `-v`: Verbose
   * `-P`: Partial + Progress (allows resuming)
 
-<!-- end list -->
 
 ```bash frame="none"
 # Push: Local -> Cluster
@@ -601,5 +600,106 @@ For terabytes of sequencing data, do not use the command line. Use Globus for re
 
 📄 **[View Quick Reference (PDF)](/assets/RCAC_data-transfer-tips.pdf)** *Includes detailed setup for Globus Connect Personal.*
 
+
+
+## 9. Storage Strategy
+
+**Goal:** Balance performance and data safety. Don't let a full disk crash your pipeline.
+
+**The Hierarchy**
+
+| Location | Path | Speed | Persistence | Use Case |
+| :--- | :--- | :--- | :--- | :--- |
+| **Local Scratch** | `$TMPDIR` | ⚡ Fastest | Temporary (Job only) | High I/O (thousands of reads/writes). |
+| **Scratch** | `$RCAC_SCRATCH` | 🚀 Fast | Purged (volatile) | Active analysis & intermediate files. |
+| **Depot** | `/depot/lab` | 🐢 Slower | Permanent | Long-term storage & shared data. |
+| **Home** | `$HOME` | 🐢 Slower | Permanent (Small Quota) | Config files, scripts, small logs. |
+
+**Quota Survival Commands**
+
+  * **Check Status:** Run `myquota` to see your usage across all filesystems.
+
+      * *Watch out:* You have limits on both **Size** (GB/TB) and **Files** (inodes).
+
+  * **Find Space Hogs:** If you hit your limit, use these commands to find which directories are taking up space:
+
+    ```bash frame="none"
+    # Check Home
+    du -h --max-depth=1 $HOME
+
+    # Check Scratch
+    du -h --max-depth=1 $RCAC_SCRATCH
+    ```
+
+**Clean Up Routine**
+
+:::danger[Volatile Storage]
+Scratch is **not** for storage. Files are purged if not accessed for a set period.
+:::
+
+<Steps>
+
+1.  **Compress:** `tar -czf results.tar.gz results/`
+2.  **Archive:** Move tarballs to Data Depot.
+3.  **Delete:** `rm -rf results/` from scratch.
+
+</Steps>
+
+
+
+## 10. Journaling & Notes
+
+**Goal:** Build a "Second Brain." Your shell history (`history | grep cmd`) is temporary; your notes are permanent.
+
+**The Strategy: Digital Lab Notebook**
+Use tools like **Obsidian** (markdown-based) or **OneNote**.
+
+  * **The "One-Liner" Library:** Save those complex `awk`, `sed`, or `slurm` commands you spent hours perfecting.
+  * **Error Logs:** When you fix a weird error, paste the *exact* error message and your solution. This makes it searchable next time you see it.
+  * **Metadata:** Document the "Why," not just the "How." (e.g., "Used parameter `-n 10` because memory failed at `-n 5`").
+
+**Example Note Structure:**
+
+```markdown
+## Error: Slurm OOM on Trinity Job
+**Date:** 2025-12-09
+**Error:** `slurmstepd: error: Detected 1 oom-kill event(s)`
+**Fix:** Increased mem-per-cpu from 4G to 8G.
+**Command:** `sbatch --mem-per-cpu=8G submit.sh`
+```
+
+
+
+## 11. Reporting with RMarkdown
+
+**Goal:** Stop copy-pasting images into PowerPoint. Create reports where the code *is* the documentation.
+
+**The Workflow**
+
+<Steps>
+
+1.  **Code + Narrative:** Use RMarkdown (`.Rmd`) to write your analysis code and your explanation in the same file.
+2.  **Knit to HTML:** Generate a single HTML file containing your interactive plots, tables, and code.
+3.  **Share:** Push the HTML to your repo and enable **GitHub Pages**. Send your PI a link, not a zip file.
+
+</Steps>
+
+**Quick Start Header**
+Use this YAML header to add a table of contents and code folding (hides code by default so non-coders can read the report).
+
+```yaml
+---
+title: "Project QC Report"
+author: "Your Name"
+date: "2025-12-09"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+```
+
+📄 **[View Quick Reference (PDF)](/assets/rmarkdown-2.0.pdf)** *Official reference for syntax, chunk options, and formatting.*
 
 
