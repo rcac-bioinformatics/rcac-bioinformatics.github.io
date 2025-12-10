@@ -21,9 +21,10 @@ h3 {
 :root {
 	/* Starlight often uses variables you can override */
 	--sl-card-min-width: 200px !important;
+	--sl-card-min-height: 200px !important;
 }
 
 /* Fallback if variable doesn't exist in your version */
 .sl-markdown-content .card-grid {
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 2fr)) !important;
 }
