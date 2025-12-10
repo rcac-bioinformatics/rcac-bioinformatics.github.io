@@ -305,7 +305,7 @@ Before you finish a project, save a snapshot of your environment. This guarantee
 
 1.  **Export (Save):**
 
-    ```bash
+    ```bash frame="none"
     # Saves only the packages you explicitly asked for (cleaner)
     conda env export --from-history > environment.yml
 
@@ -315,7 +315,7 @@ Before you finish a project, save a snapshot of your environment. This guarantee
 
 2.  **Import (Load):**
 
-    ```bash
+    ```bash frame="none"
     mamba env create -f environment.yml
     ```
 
@@ -323,4 +323,172 @@ Before you finish a project, save a snapshot of your environment. This guarantee
 
 📄 **[View Quick Reference (PDF)](/assets/RCAC_conda-package-management.pdf)** *Includes visual workflows for creating vs. using environments and version pinning examples.*
 
+
+## 5. Containers & Overlays
+
+**Goal:** Use software that runs the same way everywhere, without installation headaches or file quota (inode) issues.
+
+**Why Apptainer (Singularity)?**
+
+  * **Speed:** A container is a single file (`.sif`). It loads faster than a Conda environment with 30,000 tiny files.
+  * **Portability:** Build it on your laptop, run it on Bell, run it on Anvil. It always works.
+
+**Quick Commands**
+
+```bash frame="none"
+# Pull a container from Docker Hub
+apptainer pull fastqc.sif docker://biocontainers/fastqc:v0.11.9_cv8
+
+# Run a tool inside the container
+apptainer exec fastqc.sif fastqc input.fq
+
+# Run on GPU (Bell/Gilbreth only)
+apptainer exec --nv deepvariant.sif run_deepvariant ...
+```
+
+**The "Inode Saver" (Overlays)**
+
+:::tip[Use Overlays for High File Counts]
+Some tools (like `maker` or `trinity`) create millions of small temporary files, which hits your file count limit (quota) even if you have storage space left.
+
+**Solution:** Create an overlay file. The tool writes its temp files *inside* this single file, hiding them from the file system.
+:::
+
+```bash frame="none"
+# 1. Create a 5GB overlay file
+apptainer overlay create --size 5120 my_overlay.img
+
+# 2. Run your tool with the overlay attached
+apptainer exec --overlay my_overlay.img maker.sif maker ...
+```
+
+📄 **[View Quick Reference (PDF)](/assets/RCAC_apptainers-for-software-management.pdf)** *Includes recipes for building your own containers and advanced bind-mount usage.*
+
+
+
+## 6. Custom Bin Directory
+
+**Goal:** Standardize your tools and run complex commands with a single word.
+
+**Setup**
+
+<Steps>
+
+1.  Create the directory: `mkdir -p ~/bin`
+
+2.  Add to your `$PATH` (if not already there):
+
+    ```bash frame="none"
+    # Add this to your ~/.bashrc
+    export PATH="$HOME/bin:$PATH"
+    ```
+
+3.  Reload: `source ~/.bashrc`
+
+</Steps>
+
+**Recommended Wrapper Scripts**
+*Save these files in `~/bin`, then run `chmod +x ~/bin/*` to make them executable.*
+
+<Tabs>
+<TabItem label="sam2bam">
+#### The "Sam to Sorted Bam" Converter
+Converts SAM to BAM, sorts it, and indexes it in one go.
+
+````
+```bash frame="none" title="~/bin/sam2bam"
+#!/bin/bash
+# Usage: sam2bam input.sam
+# Output: input.sorted.bam and input.sorted.bam.bai
+
+if [ -z "$1" ]; then
+    echo "Usage: sam2bam <input.sam>"
+    exit 1
+fi
+
+BASE="${1%.sam}"
+THREADS=4
+
+echo "Converting $1 -> $BASE.sorted.bam..."
+
+# Pipe view directly to sort to save disk I/O
+samtools view -uS -@ $THREADS "$1" | \
+samtools sort -@ $THREADS -o "$BASE.sorted.bam"
+
+# Index immediately
+samtools index "$BASE.sorted.bam"
+echo "Done."
+```
+````
+
+</TabItem>
+<TabItem label="run\_bwa">
+#### The BWA-MEM Wrapper
+Runs BWA from a container without needing to load modules or remember the container path.
+
+````
+```bash frame="none" title="~/bin/run_bwa"
+#!/bin/bash
+# Usage: run_bwa <ref.fa> <read1.fq> <read2.fq>
+# Output: read1.sam
+
+CONTAINER="/depot/itap/biocontainers/bwa.sif" # Update with your path
+REF=$1
+R1=$2
+R2=$3
+THREADS=12
+
+if [ -z "$3" ]; then
+    echo "Usage: run_bwa <ref.fa> <r1.fq> <r2.fq>"
+    exit 1
+fi
+
+OUTPUT="$(basename ${R1%.*}.sam)"
+
+echo "Running BWA MEM with $THREADS threads..."
+apptainer exec $CONTAINER bwa mem -t $THREADS "$REF" "$R1" "$R2" > "$OUTPUT"
+```
+````
+
+</TabItem>
+<TabItem label="bsort">
+#### Fast BAM Sort
+Quickly sort a BAM file using available threads.
+
+````
+```bash frame="none" title="~/bin/bsort"
+#!/bin/bash
+# Usage: bsort input.bam
+
+if [ -z "$1" ]; then
+    echo "Usage: bsort <input.bam>"
+    exit 1
+fi
+
+BASE="${1%.bam}"
+THREADS=8
+
+samtools sort -@ $THREADS -o "$BASE.sorted.bam" "$1"
+samtools index "$BASE.sorted.bam"
+```
+````
+
+</TabItem>
+<TabItem label="fqcount">
+#### Read Counter
+Quickly checks read counts in gzipped files (useful for verifying transfers).
+
+````
+```bash frame="none" title="~/bin/fqcount"
+#!/bin/bash
+# Usage: fqcount file.fastq.gz
+
+zcat "$1" | echo "$1: $(( $(wc -l) / 4 )) reads"
+```
+````
+
+</TabItem>
+</Tabs>
+
+📂 **[Full Collection of Scripts](https://github.com/ISUgenomics/common_scripts)**
 
