@@ -213,3 +213,47 @@ Version control your configuration to keep clusters and local machines in sync.
     ```
 
 </Steps>
+
+
+### 3. VS Code Remote SSH
+
+**Goal:** Edit cluster files with a full graphical interface, syntax highlighting, and integrated terminals.
+
+**Setup Steps**
+
+<Steps>
+
+1.  **Install:** Download [VS Code](https://code.visualstudio.com/) locally.
+
+2.  **Extension:** Open VS Code, go to Extensions (square icon on left), and install **Remote - SSH**.
+
+3.  **Connect:** Click the green **"\>\<"** icon (bottom-left corner) → **Connect to Host...** → Select `bell` (or your target cluster).
+
+</Steps>
+
+**Essential Extensions (Install on Remote)**
+Once connected, install these in the "SSH: bell" section of your extensions pane:
+
+<CardGrid>
+<Card title="Python & Pylance" icon="seti:python">
+For code completion and debugging.
+</Card>
+<Card title="ShellCheck" icon="linux">
+To catch errors in your bash scripts automatically.
+</Card>
+<Card title="GitLens" icon="github">
+To visualize who edited code and when.
+</Card>
+<Card title="R" icon="seti:r">
+For R language support (requires extra config).
+</Card>
+</CardGrid>
+**Editing Tips**
+
+  * **Integrated Terminal:** Press \`Ctrl + \`\` to open a terminal. It opens automatically in your current remote folder.
+  * **Consistency:** If your config uses a specific node (e.g., `bell-fe02`), stick to it. Connecting to different nodes launches multiple VS Code server instances, which wastes resources.
+  * **Drag & Drop:** Drag files from your local computer into the VS Code file explorer to upload them instantly.
+
+:::note[Reference]
+📄 **[View Quick Reference (PDF)](https://www.google.com/search?q=/assets/vscode-remote-ssh.pdf)** *Includes configurations for Jupyter Kernels and R paths.*
+:::
