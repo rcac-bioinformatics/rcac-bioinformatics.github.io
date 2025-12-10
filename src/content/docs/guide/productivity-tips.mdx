@@ -54,5 +54,65 @@ import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlig
     ```bash frame="none"
     ssh boilerid@bell.rcac.purdue.edu
     ```
+</Steps>
+
+
+#### B. SSH Configuration
+
+**Goal:** Simplify login commands (e.g., type `ssh bell` instead of `ssh user@bell.rcac.purdue.edu`).
+
+<Steps>
+
+1. **Create/Edit the Config File**
+
+    Open `~/.ssh/config` on your local computer using a text editor (VS Code, Nano, Notepad, etc.).
+
+2. **Paste the Configuration**
+
+    Copy the block below. Be sure to replace `boilerid` with your specific username.
+
+    ```ssh title="~/.ssh/config"
+    # --- GLOBAL RCAC DEFAULTS ---
+    # Applies to all RCAC clusters automatically
+    Host *.rcac.purdue.edu
+        User boilerid                 # <--- REPLACE THIS with your username
+        IdentityFile ~/.ssh/id_ed25519
+        Port 22
+        ForwardAgent yes
+        ForwardX11 yes
+        
+        # Keep connection alive to prevent timeouts
+        ServerAliveInterval 300
+        ServerAliveCountMax 2
+        
+        # Multiplexing & Persistence (Speed boost for multiple windows)
+        ControlMaster auto
+        ControlPath ~/.ssh/cm-%r@%h:%p
+        ControlPersist 10m
+
+    # --- CLUSTER SHORTCUTS ---
+
+    Host bell
+        HostName bell.rcac.purdue.edu
+
+    Host negishi
+        HostName negishi.rcac.purdue.edu
+
+    Host anvil
+        HostName anvil.rcac.purdue.edu
+        # User x-boilerid           # Uncomment and update if Anvil username differs
+    ```
+
+3. **Usage**
+
+    You can now connect instantly using the short names:
+
+    ```bash frame="none"
+    ssh bell
+    ssh negishi
+    ssh anvil
+    rsync -av ~/localfolder/ bell:/depot/project/remote_folder/
+    ```
 
 </Steps>
+
