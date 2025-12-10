@@ -1,5 +1,5 @@
 ---
-title: RCAC Genomics Essentials
+title: Year-End Productivity Toolkit
 description: Year-End Productivity Toolkit for 2026 optimization.
 lastUpdated: 2025-12-09
 sidebar:
@@ -11,9 +11,9 @@ sidebar:
 import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
 
 
-## 1. Zero-Friction Access
+### 1. Zero-Friction Access
 
-### A. SSH Keys
+#### A. SSH Keys
 **Goal:** Enable password-less login to run automated scripts and transfer files seamlessly.
 
 <Steps>
@@ -22,7 +22,7 @@ import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlig
 
     Run this on your **local computer** (Terminal or PowerShell). Press `Enter` to accept defaults (file location and no passphrase).
 
-    ```bash
+    ```bash frame="none"
     ssh-keygen -t ed25519
     ```
 
@@ -36,12 +36,12 @@ import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlig
 
     <Tabs>
     <TabItem label="Mac / Linux / Git Bash" icon="linux">
-    ```bash
+    ```bash frame="none"
     ssh-copy-id boilerid@bell.rcac.purdue.edu
     ```
     </TabItem>
     <TabItem label="Windows (PowerShell)" icon="seti:windows">
-    ```powershell
+    ```powershell frame="none"
     type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh boilerid@bell.rcac.purdue.edu "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
     ```
     </TabItem>
@@ -51,7 +51,7 @@ import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlig
 
     You should now be able to log in without typing a password:
 
-    ```bash
+    ```bash frame="none"
     ssh boilerid@bell.rcac.purdue.edu
     ```
 
