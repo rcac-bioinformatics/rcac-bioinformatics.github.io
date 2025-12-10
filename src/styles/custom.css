@@ -16,3 +16,14 @@ h3 {
 		margin-bottom: 0.5rem;
 		color: #8e6f3e;
 } */
+
+/* Target the Starlight card grid class (usually .sl-card-grid or similar) */
+:root {
+	/* Starlight often uses variables you can override */
+	--sl-card-min-width: 200px !important;
+}
+
+/* Fallback if variable doesn't exist in your version */
+.sl-markdown-content .card-grid {
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+}

@@ -250,10 +250,77 @@ For R language support (requires extra config).
 </CardGrid>
 **Editing Tips**
 
-  * **Integrated Terminal:** Press \`Ctrl + \`\` to open a terminal. It opens automatically in your current remote folder.
+  * **Integrated Terminal:** Press `Ctrl + \`` to open a terminal. It opens automatically in your current remote folder.
   * **Consistency:** If your config uses a specific node (e.g., `bell-fe02`), stick to it. Connecting to different nodes launches multiple VS Code server instances, which wastes resources.
   * **Drag & Drop:** Drag files from your local computer into the VS Code file explorer to upload them instantly.
 
 :::note[Reference]
-📄 **[View Quick Reference (PDF)](https://www.google.com/search?q=/assets/vscode-remote-ssh.pdf)** *Includes configurations for Jupyter Kernels and R paths.*
+📄 **[View Quick Reference (PDF)](/assets/vscode-remote-ssh.pdf)** *Includes configurations for Jupyter Kernels and R paths.*
 :::
+
+
+
+### 4. Conda Environment Management
+
+**Goal:** Isolate software dependencies per project and avoid "works on my machine" issues.
+
+**Setup: Avoid Quota Issues**
+Conda environments are large. Configure them to store data in your Depot space, not your Home directory (which has strict limits).
+
+<Steps>
+
+1.  Create the directory: `mkdir -p /depot/your_lab/user/conda_envs`
+
+2.  Edit your config: `nano ~/.condarc`
+
+3.  Add this text:
+
+    ```yaml title="~/.condarc"
+    envs_dirs:
+      - /depot/your_lab/user/conda_envs
+      - ~/.conda/envs
+    pkgs_dirs:
+      - /depot/your_lab/user/conda_pkgs
+      - ~/.conda/pkgs
+    ```
+
+</Steps>
+
+**Quick Commands (Use `mamba` for speed)**
+The RCAC conda module includes `mamba`, which is faster than standard conda.
+
+| Action | Command |
+| :--- | :--- |
+| **Start** | `module load conda` |
+| **Create** | `mamba create -n my_env python=3.10` |
+| **Activate** | `conda activate my_env` |
+| **Install** | `mamba install bioconda::samtools` |
+| **List Envs** | `conda env list` |
+| **Remove** | `conda env remove -n my_env` |
+
+**Reproducibility: The "Time Capsule"**
+Before you finish a project, save a snapshot of your environment. This guarantees reproducibility.
+
+<Steps>
+
+1.  **Export (Save):**
+
+    ```bash
+    # Saves only the packages you explicitly asked for (cleaner)
+    conda env export --from-history > environment.yml
+
+    # Saves EXACT versions of everything (safest for immediate reproduction)
+    conda list --explicit > spec.txt
+    ```
+
+2.  **Import (Load):**
+
+    ```bash
+    mamba env create -f environment.yml
+    ```
+
+</Steps>
+
+📄 **[View Quick Reference (PDF)](/assets/RCAC_conda-package-management.pdf)** *Includes visual workflows for creating vs. using environments and version pinning examples.*
+
+
