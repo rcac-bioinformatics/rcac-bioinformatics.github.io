@@ -10,6 +10,49 @@ sidebar:
 
 import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
 
-**Session:** December 9, 2025  
-**Instructor:** Arun Seetharam  
-**Goal:** Optimize your computational environment for a faster, cleaner 2026.
+
+## 1. Zero-Friction Access
+
+### A. SSH Keys
+**Goal:** Enable password-less login to run automated scripts and transfer files seamlessly.
+
+<Steps>
+
+1. **Generate a Key Pair**
+
+    Run this on your **local computer** (Terminal or PowerShell). Press `Enter` to accept defaults (file location and no passphrase).
+
+    ```bash
+    ssh-keygen -t ed25519
+    ```
+
+2. **Copy Public Key to Cluster**
+
+    Send your public key to the cluster. Replace `boilerid` with your actual username.
+
+    :::tip[Duo Auth Tip]
+    When prompted for your password, type your password followed by `,push` (e.g., `password,push`) to approve the Duo request.
+    :::
+
+    <Tabs>
+    <TabItem label="Mac / Linux / Git Bash" icon="linux">
+    ```bash
+    ssh-copy-id boilerid@bell.rcac.purdue.edu
+    ```
+    </TabItem>
+    <TabItem label="Windows (PowerShell)" icon="seti:windows">
+    ```powershell
+    type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh boilerid@bell.rcac.purdue.edu "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+    ```
+    </TabItem>
+    </Tabs>
+
+3. **Test Connection**
+
+    You should now be able to log in without typing a password:
+
+    ```bash
+    ssh boilerid@bell.rcac.purdue.edu
+    ```
+
+</Steps>
