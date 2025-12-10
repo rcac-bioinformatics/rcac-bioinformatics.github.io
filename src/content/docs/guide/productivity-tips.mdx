@@ -647,7 +647,7 @@ Scratch is **not** for storage. Files are purged if not accessed for a set perio
 
 
 
-## 10. Journaling & Notes
+### 10. Journaling & Notes
 
 **Goal:** Build a "Second Brain." Your shell history (`history | grep cmd`) is temporary; your notes are permanent.
 
@@ -670,7 +670,7 @@ Use tools like **Obsidian** (markdown-based) or **OneNote**.
 
 
 
-## 11. Reporting with RMarkdown
+### 11. Reporting with RMarkdown
 
 **Goal:** Stop copy-pasting images into PowerPoint. Create reports where the code *is* the documentation.
 
@@ -701,5 +701,189 @@ output:
 ```
 
 📄 **[View Quick Reference (PDF)](/assets/rmarkdown-2.0.pdf)** *Official reference for syntax, chunk options, and formatting.*
+
+
+
+### 12. Version Control (Git)
+
+**Goal:** Save your work history so you can undo mistakes and collaborate without emailing zip files.
+
+**1. First-Time Setup**
+Tell Git who you are (run once per computer):
+
+```bash frame="none"
+git config --global user.name "Your Name"
+git config --global user.email "your.email@purdue.edu"
+```
+
+**2. Starting a Project**
+
+  * **New Project:** `cd my_project` then `git init`
+  * **Existing Repo:** `git clone https://github.com/username/repo.git`
+
+**3. The Daily Workflow (Save & Sync)**
+
+<Steps>
+
+1.  **Check:** See what changed.
+
+    ```bash frame="none"
+    git status
+    ```
+
+2.  **Stage:** Select files to save (use `.` for everything).
+
+    ```bash frame="none"
+    git add .
+    ```
+
+3.  **Commit:** Save the snapshot with a message.
+
+    ```bash frame="none"
+    git commit -m "Added QC plotting script"
+    ```
+
+4.  **Push:** Send changes to GitHub.
+
+    ```bash frame="none"
+    git push origin main
+    ```
+
+</Steps>
+
+**4. The "Golden Rule" of Bioinformatics Git**
+
+:::danger
+**Never** commit large data files (FASTQ, BAM, big CSVs).
+:::
+
+  * **Solution:** Create a file named `.gitignore` in your folder.
+
+  * **Add these lines to it:**
+
+    ```text title=".gitignore"
+    *.fastq
+    *.bam
+    *.sam
+    results/
+    data/
+    ```
+
+📄 **[View Quick Reference (PDF)](/assets/RCAC-github-projects.pdf)** *Includes branching workflows and a list of Git "Don'ts".*
+
+
+
+## 13. Resource Efficiency
+
+**Goal:** Stop guessing how much RAM you need. Requesting 100GB and using 2GB kills your priority and wastes cluster space.
+
+**The Audit Tool: `seff`**
+After a job finishes, run this command to see what actually happened.
+
+```bash frame="none"
+seff <job_id>
+```
+
+**What to look for:**
+
+  * **Memory Utilized:** If you requested 64GB but used 4GB, lower your request to 6GB or 8GB next time.
+  * **CPU Efficiency:** If this is low (< 50%), your code isn't using the threads you asked for. Request fewer cores.
+
+**The "Sinteractive" Test**
+Don't write a 50-line script and hope it works. Test interactively first.
+
+```bash frame="none"
+# Get a node for 1 hour
+sinteractive -A <account> -t 01:00:00 --mem=8G
+
+# Run your commands manually. If they work, put them in a script.
+```
+
+
+
+### 14. Job Arrays
+
+**Goal:** Process 100 samples in parallel using ONE script. Never write a `for` loop to submit jobs.
+
+**The Logic**
+Slurm launches multiple copies of your script. In each copy, the variable `$SLURM_ARRAY_TASK_ID` changes (1, 2, 3...). You use this number to pick which file to process.
+
+**The Template**
+Create a file named `samples.txt` listing your input filenames (one per line).
+
+```bash frame="none"
+#!/bin/bash
+#SBATCH --job-name=array_demo
+#SBATCH --output=logs/sample_%a.out  # %a becomes the task ID
+#SBATCH --array=1-24                 # Process samples 1 through 24
+#SBATCH --cpus-per-task=4
+
+# 1. Get the filename for THIS task ID
+SAMPLE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" samples.txt)
+
+echo "Processing sample: $SAMPLE"
+
+# 2. Run the tool
+apptainer exec tool.sif my_tool -i "$SAMPLE.fq" -o "$SAMPLE.bam"
+```
+
+**Common Array Commands**
+
+  * `sbatch --array=1-100 script.sh`: Submit 100 tasks.
+  * `sbatch --array=1-100%20 script.sh`: Submit 100, but only run 20 at a time (be nice to the queue).
+  * `scancel <jobid>_<taskid>`: Cancel just one specific task in the array.
+
+📄 **[View Quick Reference (PDF)](/assets/RCAC-slurm-quick-reference.pdf)** *Includes detailed syntax for GPU jobs and parameter sweeps.*
+
+
+
+### 15. Getting Help
+
+**Goal:** Unblock yourself quickly by choosing the right channel.
+
+<CardGrid>
+<Card title="Peer Support" icon="discord">
+Best for "How do I run X?" or "Why does this plot look weird?"
+[Join RCAC Genomics Discord](https://discord.gg/RmtKZmaQW9)
+</Card>
+<Card title="Tutorials" icon="open-book">
+Step-by-step guides for common bioinformatics tasks.
+[Visit RCAC Bioinformatics Docs](https://rcac-bioinformatics.github.io/)
+</Card>
+<Card title="Announcements" icon="email">
+Subscribe to the **Bioinformatics Mailing List** to catch upcoming workshops and events.
+</Card>
+<Card title="System Issues" icon="warning">
+Best for "The node crashed" or "I can't log in."
+Email: [rcac-help@purdue.edu](mailto:rcac-help@purdue.edu)
+</Card>
+</CardGrid>
+
+
+
+### 16. Writing Effective Support Tickets
+
+**Goal:** Get your problem fixed in one email, not ten.
+
+**The "Good Ticket" Template**
+When emailing `rcac-help@purdue.edu`, include these four things to skip the "back-and-forth" phase:
+
+1.  **The Cluster:** (e.g., Bell, Anvil, Negishi)
+2.  **The Job ID:** (e.g., `12345678`) – Support staff can look up exactly why it failed.
+3.  **The Error:** Paste the *exact* error message or attach the `.err` log file. Don't just say "it failed."
+4.  **The Path:** Where is the script/data located? (e.g., `/scratch/bell/user/project/run.sh`)
+
+**Example Email:**
+
+:::note[Email Example]
+
+> **Subject:** Job 12345678 failed on Bell - "Segmentation Fault"
+>
+> Hi,
+> My job **12345678** on **Bell** failed immediately after starting.
+> **Path:** `/scratch/bell/aseethar/project_x/submit.sh`
+> **Error:** The log file shows `Segmentation fault (core dumped)` when loading the `samtools` module.
+>
+> I have attached the slurm output file. Can you help?
 
 
