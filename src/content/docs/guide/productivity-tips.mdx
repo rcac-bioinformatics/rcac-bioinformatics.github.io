@@ -71,7 +71,7 @@ import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlig
 
     Copy the block below. Be sure to replace `boilerid` with your specific username.
 
-    ```ssh title="~/.ssh/config"
+    ```bash title="~/.ssh/config"
     # --- GLOBAL RCAC DEFAULTS ---
     # Applies to all RCAC clusters automatically
     Host *.rcac.purdue.edu
@@ -116,3 +116,100 @@ import { Steps, FileTree, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlig
 
 </Steps>
 
+### 2. Shell Aliases & Dotfiles
+
+**Goal:** Save keystrokes on repetitive commands and prevent home directory quota issues.
+
+#### A. The Setup
+
+Instead of cluttering your main `.bashrc` file, create a separate file for shortcuts.
+
+<Steps>
+
+1. **Create the file:**
+
+    ```bash frame="none"
+    nano ~/.bash_aliases
+    ```
+
+2. **Paste the content below** (Customize the `APPTAINER_CACHEDIR` path!).
+
+3. **Activate it:**
+
+    Open your `.bashrc` (`nano ~/.bashrc`) and ensure this block exists (it usually does by default):
+
+    ```bash fr
+    if [ -f ~/.bash_aliases ]; then
+        . ~/.bash_aliases
+    fi
+    ```
+
+4. **Reload:**
+
+    Run `source ~/.bashrc` to apply changes immediately.
+
+</Steps>
+
+#### B. Recommended Aliases
+
+Copy this into your `~/.bash_aliases` file.
+
+```bash title="~/.bash_aliases"
+# --- 1. ENVIRONMENT VARIABLES ---
+# CRITICAL: Point Apptainer cache to Depot/Scratch to avoid filling up Home
+export APPTAINER_CACHEDIR="/depot/itap/$USER/apptainer"
+
+# --- 2. LISTING & NAVIGATION ---
+alias pwd='pwd -P'                # Show physical path (resolves symlinks)
+alias ls='ls --color=auto -v'     # Colorized output
+alias ll='ls -l'                  # Standard long list
+alias la='ls -Al'                 # Show hidden files
+alias lt='ls -ltr'                # Sort by date (newest at bottom) - GREAT for checking logs
+alias lk='ls -lSr'                # Sort by size (biggest at bottom)
+alias ld='ls -d */'               # List directories only
+
+# Advanced Listing (Requires 'exa' if you use 'lr')
+# alias lr='exa --long --color-scale --tree --level=3' 
+
+# --- 3. DISK USAGE ---
+alias du='du -kh'                 # Human readable sizes
+alias dd='du -sch *'              # Summary of current directory sizes
+
+# --- 4. SAFETY ---
+alias rm='rm -i'                  # Ask before deleting
+alias cp='cp -i'                  # Ask before overwriting
+alias mv='mv -i'                  # Ask before overwriting
+
+# --- 5. SLURM (JOB MANAGEMENT) ---
+
+# Check MY jobs (Formatted for readability)
+alias myq='squeue -o "%12i %20j %2t %8u %10q %10a %10P %10Q %5D %5C %11l %11L %R" -u $USER'
+
+# Check ALL jobs
+alias qs='squeue -a -o "%12i %20j %2t %8u %10q %10a %10P %10Q %5D %5C %11l %11L %R"'
+
+# Check Node Status (Idle, Mixed, Allocated, etc.)
+alias ql='sinfo -o "%20P %5D %14F %8z %10m %10d %11l %N"'
+
+# Quick Interactive Job (Customize allocation/time as needed)
+alias interact='sinteractive -A <YOUR_ALLOCATION> -t 04:00:00 -N 1 -n 16'
+````
+
+#### C. Dotfiles Management
+
+Version control your configuration to keep clusters and local machines in sync.
+
+<Steps>
+
+1.  Create a **private** GitHub repository named `dotfiles`.
+
+2.  Move your config files there and symlink them back.
+
+    ```bash
+    # Example workflow
+    mkdir ~/dotfiles
+    mv ~/.bash_aliases ~/dotfiles/
+    ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
+    ```
+
+</Steps>
