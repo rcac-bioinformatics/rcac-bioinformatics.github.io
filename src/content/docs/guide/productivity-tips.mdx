@@ -324,7 +324,7 @@ Before you finish a project, save a snapshot of your environment. This guarantee
 📄 **[View Quick Reference (PDF)](/assets/RCAC_conda-package-management.pdf)** *Includes visual workflows for creating vs. using environments and version pinning examples.*
 
 
-## 5. Containers & Overlays
+### 5. Containers & Overlays
 
 **Goal:** Use software that runs the same way everywhere, without installation headaches or file quota (inode) issues.
 
@@ -366,7 +366,7 @@ apptainer exec --overlay my_overlay.img maker.sif maker ...
 
 
 
-## 6. Custom Bin Directory
+### 6. Custom Bin Directory
 
 **Goal:** Standardize your tools and run complex commands with a single word.
 
@@ -395,8 +395,8 @@ apptainer exec --overlay my_overlay.img maker.sif maker ...
 #### The "Sam to Sorted Bam" Converter
 Converts SAM to BAM, sorts it, and indexes it in one go.
 
-````
-```bash frame="none" title="~/bin/sam2bam"
+
+```bash title="~/bin/sam2bam"
 #!/bin/bash
 # Usage: sam2bam input.sam
 # Output: input.sorted.bam and input.sorted.bam.bai
@@ -419,15 +419,15 @@ samtools sort -@ $THREADS -o "$BASE.sorted.bam"
 samtools index "$BASE.sorted.bam"
 echo "Done."
 ```
-````
+
 
 </TabItem>
-<TabItem label="run\_bwa">
+<TabItem label="run_bwa">
 #### The BWA-MEM Wrapper
 Runs BWA from a container without needing to load modules or remember the container path.
 
-````
-```bash frame="none" title="~/bin/run_bwa"
+
+```bash title="~/bin/run_bwa"
 #!/bin/bash
 # Usage: run_bwa <ref.fa> <read1.fq> <read2.fq>
 # Output: read1.sam
@@ -448,15 +448,15 @@ OUTPUT="$(basename ${R1%.*}.sam)"
 echo "Running BWA MEM with $THREADS threads..."
 apptainer exec $CONTAINER bwa mem -t $THREADS "$REF" "$R1" "$R2" > "$OUTPUT"
 ```
-````
+
 
 </TabItem>
 <TabItem label="bsort">
 #### Fast BAM Sort
 Quickly sort a BAM file using available threads.
 
-````
-```bash frame="none" title="~/bin/bsort"
+
+```bash title="~/bin/bsort"
 #!/bin/bash
 # Usage: bsort input.bam
 
@@ -471,24 +471,237 @@ THREADS=8
 samtools sort -@ $THREADS -o "$BASE.sorted.bam" "$1"
 samtools index "$BASE.sorted.bam"
 ```
-````
+
 
 </TabItem>
 <TabItem label="fqcount">
 #### Read Counter
 Quickly checks read counts in gzipped files (useful for verifying transfers).
 
-````
+
 ```bash frame="none" title="~/bin/fqcount"
 #!/bin/bash
 # Usage: fqcount file.fastq.gz
 
 zcat "$1" | echo "$1: $(( $(wc -l) / 4 )) reads"
 ```
-````
+
 
 </TabItem>
 </Tabs>
 
 📂 **[Full Collection of Scripts](https://github.com/ISUgenomics/common_scripts)**
+
+## 7. Organizing Projects
+
+**Goal:** Structure your data and code so that collaborators (and "Future You") can understand and reproduce your work.
+
+**The "Standard" Directory Tree**
+Adopt this structure for every new experiment to keep things consistent.
+
+<FileTree>
+
+  - YYYYMMDD_ProjectName/
+      - 00_meta/
+          - README
+          - notes
+          - methods.md
+      - 01_data/
+          - raw/
+              - **Read-only\! (FASTQ, reference genomes)**
+          - processed/
+              - **Cleaned data (trimmed reads)**
+      - 02_scripts/
+          - 01_qc.sh
+          - 02_mapping.sh
+      - 03_analysis/
+          - **INTERMEDIATE FILES (BAMs, VCFs)**
+      - 04_results/
+          - **FINAL OUTPUTS (Figures, Tables for paper)**
+      - 99_logs/
+          - **Slurm output and error logs**
+
+</FileTree>
+
+**Best Practices**
+
+  * **Raw Data is Sacred:** Never write to `01_data/raw`. Treat it as read-only.
+  * **Number Your Scripts:** Name them in execution order (e.g., `01_qc`, `02_align`, `03_call_variants`).
+  * **No Spaces:** Use underscores or hyphens in file names (e.g., `Airway_Study`, not `Airway Study`).
+  * **Relative Paths:** Write scripts that reference `../01_data` rather than `/scratch/bell/user/project/...` so the folder is portable.
+
+**Version Control (Git)**
+Track your `02_scripts` folder, but **ignore** large data files.
+
+```bash frame="none"
+# 1. Start tracking
+cd 02_scripts
+git init
+
+# 2. Save changes
+git add *.sh
+git commit -m "Added alignment script"
+
+# 3. Push to cloud (optional but recommended)
+git remote add origin [https://github.com/user/project.git](https://github.com/user/project.git)
+git push -u origin main
+```
+
+📄 **[View Quick Reference (PDF)](/assets/RCAC_project-organization-tips.pdf)** *Includes a step-by-step workflow for starting a new project.*
+
+
+
+## 8. File Transfers
+
+**Goal:** Move data efficiently without corrupting files or freezing your terminal.
+
+**Choose the Right Tool**
+
+| Data Size | Recommended Tool | Why? |
+| :--- | :--- | :--- |
+| **< 1 GB** | `scp` | Quick, simple, no setup required. |
+| **Directories** | `rsync` | Resumes if interrupted, syncs only changes. |
+| **Big Data (>100GB)** | **Globus** | "Fire and forget." Fast, reliable, background transfer. |
+| **Cloud (Box/Drive)** | `rclone` | Command-line sync for cloud storage. |
+
+**1. `rsync` (The Workhorse)**
+Use this for moving project folders between your laptop and the cluster, or between scratch and depot.
+
+  * `-a`: Archive (preserve permissions/times)
+  * `-v`: Verbose
+  * `-P`: Partial + Progress (allows resuming)
+
+<!-- end list -->
+
+```bash frame="none"
+# Push: Local -> Cluster
+rsync -avP ./local_folder/ boilerid@bell.rcac.purdue.edu:/scratch/bell/boilerid/dest/
+
+# Pull: Cluster -> Local
+rsync -avP boilerid@bell.rcac.purdue.edu:~/remote_file.txt ./
+```
+
+**2. `scp` (Quick Copy)**
+Best for grabbing a single config file or script.
+
+```bash frame="none"
+scp boilerid@bell.rcac.purdue.edu:~/slurm_job.out ./
+```
+
+**3. Globus (Big Data)**
+For terabytes of sequencing data, do not use the command line. Use Globus for reliable, high-speed transfers that run in the background. First install **[Globus Connect Personal](https://www.globus.org/globus-connect-personal)** on your laptop and set it up.
+
+<Steps>
+
+1.  Log in to **[transfer.rcac.purdue.edu](https://transfer.rcac.purdue.edu)**.
+2.  **Panel 1:** Select "Purdue Rossmann/Bell/Anvil".
+3.  **Panel 2:** Select your personal endpoint (laptop) or collaborator's endpoint.
+4.  Drag and drop. You can close your browser; Globus will email you when it's done.
+
+</Steps>
+
+📄 **[View Quick Reference (PDF)](/assets/RCAC_data-transfer-tips.pdf)** *Includes detailed setup for Globus Connect Personal.*
+
+
+
+## 9. Storage Strategy
+
+**Goal:** Balance performance and data safety. Don't let a full disk crash your pipeline.
+
+**The Hierarchy**
+
+| Location | Path | Speed | Persistence | Use Case |
+| :--- | :--- | :--- | :--- | :--- |
+| **Local Scratch** | `$TMPDIR` | ⚡ Fastest | Temporary (Job only) | High I/O (thousands of reads/writes). |
+| **Scratch** | `$RCAC_SCRATCH` | 🚀 Fast | Purged (volatile) | Active analysis & intermediate files. |
+| **Depot** | `/depot/lab` | 🐢 Slower | Permanent | Long-term storage & shared data. |
+| **Home** | `$HOME` | 🐢 Slower | Permanent (Small Quota) | Config files, scripts, small logs. |
+
+**Quota Survival Commands**
+
+  * **Check Status:** Run `myquota` to see your usage across all filesystems.
+
+      * *Watch out:* You have limits on both **Size** (GB/TB) and **Files** (inodes).
+
+  * **Find Space Hogs:** If you hit your limit, use these commands to find which directories are taking up space:
+
+    ```bash frame="none"
+    # Check Home
+    du -h --max-depth=1 $HOME
+
+    # Check Scratch
+    du -h --max-depth=1 $RCAC_SCRATCH
+    ```
+
+**Clean Up Routine**
+
+:::danger[Volatile Storage]
+Scratch is **not** for storage. Files are purged if not accessed for a set period.
+:::
+
+<Steps>
+
+1.  **Compress:** `tar -czf results.tar.gz results/`
+2.  **Archive:** Move tarballs to Data Depot.
+3.  **Delete:** `rm -rf results/` from scratch.
+
+</Steps>
+
+
+
+## 10. Journaling & Notes
+
+**Goal:** Build a "Second Brain." Your shell history (`history | grep cmd`) is temporary; your notes are permanent.
+
+**The Strategy: Digital Lab Notebook**
+Use tools like **Obsidian** (markdown-based) or **OneNote**.
+
+  * **The "One-Liner" Library:** Save those complex `awk`, `sed`, or `slurm` commands you spent hours perfecting.
+  * **Error Logs:** When you fix a weird error, paste the *exact* error message and your solution. This makes it searchable next time you see it.
+  * **Metadata:** Document the "Why," not just the "How." (e.g., "Used parameter `-n 10` because memory failed at `-n 5`").
+
+**Example Note Structure:**
+
+```markdown
+## Error: Slurm OOM on Trinity Job
+**Date:** 2025-12-09
+**Error:** `slurmstepd: error: Detected 1 oom-kill event(s)`
+**Fix:** Increased mem-per-cpu from 4G to 8G.
+**Command:** `sbatch --mem-per-cpu=8G submit.sh`
+```
+
+
+
+## 11. Reporting with RMarkdown
+
+**Goal:** Stop copy-pasting images into PowerPoint. Create reports where the code *is* the documentation.
+
+**The Workflow**
+
+<Steps>
+
+1.  **Code + Narrative:** Use RMarkdown (`.Rmd`) to write your analysis code and your explanation in the same file.
+2.  **Knit to HTML:** Generate a single HTML file containing your interactive plots, tables, and code.
+3.  **Share:** Push the HTML to your repo and enable **GitHub Pages**. Send your PI a link, not a zip file.
+
+</Steps>
+
+**Quick Start Header**
+Use this YAML header to add a table of contents and code folding (hides code by default so non-coders can read the report).
+
+```yaml
+---
+title: "Project QC Report"
+author: "Your Name"
+date: "2025-12-09"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+```
+
+📄 **[View Quick Reference (PDF)](/assets/rmarkdown-2.0.pdf)** *Official reference for syntax, chunk options, and formatting.*
+
 
