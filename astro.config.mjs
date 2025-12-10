@@ -59,7 +59,7 @@ export default defineConfig({
                 {
                     icon: 'github',
                     label: 'GitHub',
-                    href: 'https://github.com/aseetharam/rcac-bioinformatics'
+                    href: 'https://github.com/rcac-bioinformatics/rcac-bioinformatics.github.io'
                 },
                 {
                     icon: 'discord',
