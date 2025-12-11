@@ -7,20 +7,41 @@ banner:
      <a href="https://rcac-bioinformatics.github.io/">Explore the full site</a> for tutorials, pipelines, and RCAC-optimized workflows.
 ---
 
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+[![Mailing List](https://img.shields.io/badge/Subscribe-Mailing%20List-005696?style=for-the-badge&logo=microsoftoutlook&logoColor=white)](mailto:RCAC-BIOINFO-subscribe-request@lists.purdue.edu?subject=subscribe)
+[![Discord](https://img.shields.io/badge/Chat-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](YOUR_DISCORD_LINK_HERE)
+
 Welcome to the RCAC Bioinformatics Tutorials site! Your starting point for running bioinformatics tools efficiently on Purdue’s high-performance computing clusters.
 
 This documentation hub offers:
 
-- **Step-by-step guides** on using tools like Trinity, HiFiasm, BRAKER, and Juicer
+- **Full Workshop Sites** for [RNA-seq Analysis](https://rcac-bioinformatics.github.io/rnaseq-analysis/), [Genome Assembly](https://rcac-bioinformatics.github.io/genome-assembly/), and [Annotation](https://rcac-bioinformatics.github.io/genome-annotation/).
 - **Workflows for genomics and transcriptomics**, tailored to RCAC’s systems (Negishi, Bell, Gilbreth, etc.)
 - **Best practices** for HPC job submission, resource optimization, and troubleshooting
 - **Custom installation instructions** for commonly used software and environments
 
 Whether you're a beginner exploring RNA-seq or an experienced researcher deploying large-scale genome assembly, this site is designed to help you get results faster and with fewer headaches.
 
-import { Card } from '@astrojs/starlight/components';
+<CardGrid>
 
 <Card title="New tutorials added!" icon="rocket">
-  Want to install R packages, transfer data with iRODS, or visualize MAGeCK-VISPR results? Check out our latest tutorials:
+  Want to install R packages, transfer data with iRODS, or visualize MAGeCK-VISPR results? Check out our latest tutorials.
 </Card>
 
+<Card title="Workshop Archives" icon="open-book">
+  Deep-dive training materials:
+  * [**RNA-seq Analysis**](https://rcac-bioinformatics.github.io/rnaseq-analysis/)
+  * [**Genome Assembly**](https://rcac-bioinformatics.github.io/genome-assembly/)
+  * [**Genome Annotation**](https://rcac-bioinformatics.github.io/genome-annotation/)
+</Card>
+
+<Card title="Stay Connected" icon="email">
+  **Don't miss upcoming workshops!**
+  [Click here to Subscribe](mailto:RCAC-BIOINFO-subscribe-request@lists.purdue.edu?subject=subscribe) to our announcement list.
+
+  **Need help?**
+  [Join us on Discord](YOUR_DISCORD_LINK_HERE) or email [rcac-help@purdue.edu](mailto:rcac-help@purdue.edu).
+</Card>
+
+</CardGrid>
