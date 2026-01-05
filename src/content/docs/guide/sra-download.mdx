@@ -14,10 +14,10 @@ This guide walks you through downloading FASTQ files from SRA on RCAC clusters u
 
 ## Quick Start
 
-If you're familiar with HPC and just need the commands:
+If you're familiar with HPC (Negishi/Gautschi/Bell) and just need the commands:
 
 ```bash frame="none"
-module load sra-toolkit
+module load sra-tools
 prefetch SRR12345678
 fasterq-dump SRR12345678 --split-files -e 8 -p
 ```
@@ -28,8 +28,8 @@ For detailed instructions and best practices, continue reading below.
 
 Before downloading, it's important to understand the two-step workflow:
 
-1. **prefetch** - Downloads the compressed `.sra` file from NCBI to your local cache
-2. **fasterq-dump** - Converts the `.sra` file to FASTQ format
+1. **`prefetch`**  Downloads the compressed `.sra` file from NCBI to your local cache
+2. **`fasterq-dump`** - Converts the `.sra` file to FASTQ format
 
 <Aside type="tip">
 Always use `prefetch` before `fasterq-dump`. Direct downloads with `fasterq-dump` alone are slower and prone to network failures.
@@ -43,7 +43,7 @@ Always use `prefetch` before `fasterq-dump`. Direct downloads with `fasterq-dump
 
    ```bash frame="none"
    module load biocontainers
-   module load sra-toolkit
+   module load sra-tools
    ```
 
    Verify the installation:
@@ -133,14 +133,13 @@ For large downloads, submit a batch job rather than running interactively.
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --time=04:00:00
-#SBATCH --mem=16G
 #SBATCH --output=sra_%j.out
 #SBATCH --error=sra_%j.err
 
 # Load required modules
 module purge
 module load biocontainers
-module load sra-toolkit
+module load sra-tools
 
 # Set variables
 SRR_ID="SRR12345678"
@@ -182,14 +181,13 @@ ls -lh ${SRR_ID}*.fastq.gz
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --time=24:00:00
-#SBATCH --mem=32G
 #SBATCH --output=sra_batch_%j.out
 #SBATCH --error=sra_batch_%j.err
 
 # Load required modules
 module purge
 module load biocontainers
-module load sra-toolkit
+module load sra-tools
 
 # Set variables
 ACCESSION_FILE="accession_list.txt"
@@ -240,7 +238,6 @@ ls -lh *.fastq.gz
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --time=04:00:00
-#SBATCH --mem=16G
 #SBATCH --array=1-10%5
 #SBATCH --output=sra_%A_%a.out
 #SBATCH --error=sra_%A_%a.err
@@ -248,7 +245,7 @@ ls -lh *.fastq.gz
 # Load required modules
 module purge
 module load biocontainers
-module load sra-toolkit
+module load sra-tools
 
 # Set variables
 ACCESSION_FILE="accession_list.txt"
