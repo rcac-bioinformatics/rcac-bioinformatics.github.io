@@ -83,12 +83,13 @@ export default defineConfig({
                     items: [
                         { label: 'Installing R packages', link: '/guide/r-packages' },
                         { label: 'Installing Perl packages', link: '/guide/perllib' },
-                        { label: 'Transfer data with iRODS', link: 'guide/icommands' },
+                        { label: 'Transfer data with iRODS', link: '/guide/icommands' },
                         { label: 'Optimizing Trinity', link: '/guide/trinity' },
                         { label: 'VISPR visualization', link: '/guide/vispr' },
                         { label: 'Nextflow installation', link: '/guide/nextflow' },
                         { label: 'VS Code setup', link: '/guide/vscode' },
                         { label: 'Productivity tips', link: '/guide/productivity-tips' },
+                        { label: 'Download SRA data', link: '/guide/sra-download' },
                     ],
                 },
                 {
