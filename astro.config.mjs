@@ -86,6 +86,7 @@ export default defineConfig({
                         { label: 'VISPR visualization', link: '/guide/vispr' },
                         { label: 'Nextflow installation', link: '/guide/nextflow' },
                         { label: 'VS Code setup', link: '/guide/vscode' },
+                        { label: 'Project organization', link: '/guide/project-organization' },
                         { label: 'Productivity tips', link: '/guide/productivity-tips' },
                         { label: 'Download SRA data', link: '/guide/sra-download' },
                     ],
