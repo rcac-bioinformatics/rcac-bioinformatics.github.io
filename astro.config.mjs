@@ -88,11 +88,6 @@ export default defineConfig({
                         { label: 'VS Code setup', link: '/guide/vscode' },
                         { label: 'Productivity tips', link: '/guide/productivity-tips' },
                         { label: 'Download SRA data', link: '/guide/sra-download' },
-                        { label: 'Conda/Mamba environments', link: '/guide/conda' },
-                        { label: 'SLURM job arrays', link: '/guide/job-arrays' },
-                        { label: 'QC and trimming', link: '/guide/fastqc' },
-                        { label: 'Apptainer containers', link: '/guide/apptainer' },
-                        { label: 'Project organization', link: '/guide/project-organization' },
                     ],
                 },
                 {
@@ -112,41 +107,6 @@ export default defineConfig({
                             label: 'Genome assembly',
                             items: [
                                 { label: 'HiFiasm', link: '/tutorials/hifi_assembly' },
-                                { label: 'Hi-C scaffolding (YaHS)', link: '/tutorials/scaffolding' },
-                            ],
-                        },
-                        {
-                            label: 'Genome annotation',
-                            items: [
-                                { label: 'Repeat masking', link: '/tutorials/repeat-masking' },
-                                { label: 'Annotation assessment', link: '/tutorials/annotation-qc' },
-                            ],
-                        },
-                        {
-                            label: 'RNA-Seq analysis',
-                            items: [
-                                { label: 'Differential expression', link: '/tutorials/rnaseq-de' },
-                                { label: 'Long-read RNA-Seq', link: '/tutorials/long-read-rnaseq' },
-                            ],
-                        },
-                        { label: 'Variant calling (GATK)', link: '/tutorials/variant-calling' },
-                        {
-                            label: 'Comparative genomics',
-                            items: [
-                                { label: 'Synteny (SyRI)', link: '/tutorials/synteny' },
-                                { label: 'Phylogenomics (OrthoFinder)', link: '/tutorials/orthofinder' },
-                            ],
-                        },
-                        {
-                            label: 'Metagenomics',
-                            items: [
-                                { label: '16S amplicon (QIIME 2)', link: '/tutorials/qiime2' },
-                            ],
-                        },
-                        {
-                            label: 'Single-cell analysis',
-                            items: [
-                                { label: 'scRNA-seq (Cell Ranger + Seurat)', link: '/tutorials/single-cell' },
                             ],
                         },
                     ],
