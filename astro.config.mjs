@@ -81,6 +81,7 @@ export default defineConfig({
                     items: [
                         { label: 'Installing R packages', link: '/guide/r-packages' },
                         { label: 'R data wrangling', link: '/guide/r-data-wrangling' },
+                        { label: 'Publication-quality plots', link: '/guide/publication-quality-plots' },
                         { label: 'Installing Perl packages', link: '/guide/perllib' },
                         { label: 'Transfer data with iRODS', link: '/guide/icommands' },
                         { label: 'Optimizing Trinity', link: '/guide/trinity' },
