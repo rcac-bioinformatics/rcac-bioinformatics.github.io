@@ -7,57 +7,133 @@
 	--sl-color-accent-low: hsl(0, 0%, 0%);
 }
 
-/* --- 2. CARD GRID LAYOUT --- */
+/* ==========================================================================
+   2. CARD GRID — Responsive CSS Grid
+   ========================================================================== */
 
-/* FORCE 3 CARDS PER ROW on desktop */
 .sl-markdown-content .card-grid {
-	/* 1fr 1fr 1fr = 3 equal columns. */
-	grid-template-columns: repeat(3, 1fr) !important;
+	display: grid;
+	gap: 1.25rem;
+	/* Default: auto-fit columns, min 16rem so 2-col pages and 3-col pages both work */
+	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 }
 
-/* Tablet: Make sure it doesn't look squished */
-@media (max-width: 800px) {
+@media (min-width: 50rem) {
 	.sl-markdown-content .card-grid {
-		grid-template-columns: 1fr 1fr !important;
+		gap: 1.5rem;
 	}
 }
 
-/* Phone: Stack them vertically */
-@media (max-width: 500px) {
+/* Phone: always single column */
+@media (max-width: 30rem) {
 	.sl-markdown-content .card-grid {
-		grid-template-columns: 1fr !important;
+		grid-template-columns: 1fr;
 	}
 }
 
-/* --- 3. CARD INTERNALS (Typography & Spacing) --- */
+/* ==========================================================================
+   3. CARD — Container
+   --------------------------------------------------------------------------
+   Starlight sets --sl-card-border and --sl-card-bg per nth-child in a
+   @layer, so those custom properties are still available here. We use them
+   for the left accent border and icon background.
+   ========================================================================== */
 
-/* Target the Card Container */
-.sl-markdown-content .card-grid .card {
-	padding: 1rem !important;
-	/* Reduce padding to give text more room */
+.sl-markdown-content .card {
+	/* Shape */
+	border: 1px solid var(--sl-color-gray-5);
+	border-left: 3px solid var(--sl-card-border, var(--sl-color-purple));
+	border-radius: 0.625rem;
+
+	/* Background: translucent surface that works in both themes.
+	   Dark mode: --sl-color-black is near-black → gets slight transparency.
+	   Light mode: --sl-color-black maps to white → same effect. */
+	background-color: var(--sl-color-black);
+	background-image: linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--sl-card-bg, var(--sl-color-purple-low)) 40%, transparent),
+		transparent 60%
+	);
+
+	/* Depth */
+	box-shadow:
+		0 1px 2px rgba(0, 0, 0, 0.06),
+		0 1px 3px rgba(0, 0, 0, 0.1);
+
+	/* Spacing */
+	padding: 1.25rem 1.5rem;
+	flex-direction: column;
+	gap: 0.75rem;
+
+	/* Hover transition */
+	transition:
+		box-shadow 0.25s ease,
+		transform 0.25s ease,
+		border-left-color 0.25s ease;
 }
 
-/* Target the Title (Make it smaller/tighter) */
-.sl-markdown-content .card-grid .card .title {
-	font-size: 1rem !important;
-	line-height: 1.2 !important;
-	margin-bottom: 0.5rem !important;
+/* Hover: lift + stronger shadow + brighter accent */
+.sl-markdown-content .card:hover {
+	transform: translateY(-2px);
+	box-shadow:
+		0 4px 6px rgba(0, 0, 0, 0.07),
+		0 10px 24px rgba(0, 0, 0, 0.12);
+	border-left-color: var(--sl-card-border, var(--sl-color-purple));
+	border-left-width: 4px;
 }
 
-/* Target the Body Text (Description) */
-.sl-markdown-content .card-grid .card .body {
-	font-size: 0.85rem !important;
-	line-height: 1.4 !important;
+/* ==========================================================================
+   4. CARD — Title
+   ========================================================================== */
+
+.sl-markdown-content .card .title {
+	font-size: var(--sl-text-h4);
+	font-weight: 600;
+	line-height: var(--sl-line-height-headings);
+	color: var(--sl-color-white);
+	gap: 0.625rem;
+	align-items: center;
 }
 
-/* Target the Icon (Optional: Shrink it) */
-.sl-markdown-content .card-grid .card .icon {
-	font-size: 1.2rem !important;
-	margin-bottom: 0.5rem !important;
+/* ==========================================================================
+   5. CARD — Icon badge
+   ========================================================================== */
+
+.sl-markdown-content .card .icon {
+	border: 1px solid var(--sl-card-border, var(--sl-color-purple));
+	background-color: var(--sl-card-bg, var(--sl-color-purple-low));
+	padding: 0.25em;
+	border-radius: 0.375rem;
+	flex-shrink: 0;
 }
 
+/* ==========================================================================
+   6. CARD — Body text
+   ========================================================================== */
 
-/* --- 4. TYPOGRAPHY (Commented Out) --- */
+.sl-markdown-content .card .body {
+	font-size: clamp(var(--sl-text-sm), calc(0.5rem + 1vw), var(--sl-text-body));
+	line-height: 1.55;
+	color: var(--sl-color-gray-2);
+	margin: 0;
+}
+
+/* Give list items inside cards a bit of breathing room */
+.sl-markdown-content .card .body li {
+	margin-block: 0.2em;
+}
+
+/* Inline code in card body: slightly muted background */
+.sl-markdown-content .card .body code {
+	font-size: 0.9em;
+	padding: 0.1em 0.35em;
+	border-radius: 0.25rem;
+	background-color: var(--sl-color-gray-6);
+}
+
+/* ==========================================================================
+   7. TYPOGRAPHY (Commented Out)
+   ========================================================================== */
 /* h1, h2, h3 {
     font-family: 'Source Serif Pro', serif;
     font-weight: 700;
@@ -65,5 +141,5 @@
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
     color: #8e6f3e;
-} 
+}
 */
