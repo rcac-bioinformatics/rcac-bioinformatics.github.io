@@ -42,7 +42,8 @@ You need a terminal session on the cluster before running any commands. There ar
 <Tabs>
   <TabItem label="Open OnDemand (Browser)">
     <Steps>
-      1. Go to [ondemand.rcac.purdue.edu](https://ondemand.rcac.purdue.edu) and log in with your Purdue credentials.
+      1. Go to [gateway.negishi.rcac.purdue.edu](https://gateway.negishi.rcac.purdue.edu) and log in with your Purdue credentials.
+         For other clusters, replace `negishi` with the cluster name (e.g., `gateway.gautschi.rcac.purdue.edu`, `gateway.bell.rcac.purdue.edu`, `gateway.gilbreth.rcac.purdue.edu`).
       2. Click **Clusters** in the top menu, then select the cluster shell (e.g., **Negishi Shell Access**).
       3. A terminal opens in your browser. You are on a **login node**.
     </Steps>
@@ -96,30 +97,70 @@ module --force purge
 module load biocontainers samtools/1.21
 ```
 
-The `biocontainers` module unlocks all bioinformatics software. You must load it before any tool module becomes visible. Use `module --force purge` (not just `module purge`) to remove **sticky modules** like `xalt` that use a newer `glibc` and can conflict with containerized tools.
+The `biocontainers` module unlocks all bioinformatics software. You must load it before any tool module becomes visible.
 
-After loading, run the tool as usual:
+<Aside type="tip">
+  When you load `biocontainers`, you will see a message pointing to the user guides:
+  ```
+  User guides for each biocontainer module can be found in https://www.rcac.purdue.edu/knowledge/biocontainers
+  ```
+  This is a great resource for tool-specific documentation and examples.
+</Aside>
+
+Use `module --force purge` (not just `module purge`) to remove **sticky modules** like `xalt` that use a newer `glibc` and conflict with containerized tools. Here is what happens if you skip `--force`:
 
 ```bash frame="none"
-samtools --version
+module load biocontainers bwa
+bwa
 ```
 
-Behind the scenes, RCAC provides wrapper scripts so that containerized tools behave like native commands. When you type `samtools`, the wrapper runs `apptainer exec <container.sif> samtools` for you.
+```
+/bin/sh: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.33' not found (required by /apps/external/apps/xalt3/xalt/xalt/lib64/libxalt_init.so)
+/bin/sh: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.34' not found (required by /apps/external/apps/xalt3/xalt/xalt/lib64/libxalt_init.so)
+```
+
+The fix is to always start with `module --force purge`:
+
+```bash frame="none"
+module --force purge
+module load biocontainers bwa
+bwa
+```
+
+After loading, run the tool as usual — the output will appear as if the tool is installed natively.
+
+Behind the scenes, RCAC creates **shell functions** that wrap each tool in an `apptainer`/`singularity` container call. When you type `bwa`, the function runs `singularity run <container.sif> bwa` for you.
 
 ### Understanding the wrapper
 
-Because the tools are containerized, `which` and `type` will show the **wrapper script**, not the actual executable inside the container:
+Because the tools are containerized, `which` and `type` will show the **shell function** that wraps the container call, not the actual executable:
 
 ```bash frame="none"
-which samtools
-# /apps/biocontainers/bin/samtools  (wrapper script)
-type samtools
-# samtools is /apps/biocontainers/bin/samtools
+which bwa
 ```
 
-For most use cases this does not matter — the wrapper handles everything transparently. However, if a pipeline or workflow checks the executable path (e.g., `which samtools` to verify the installation), you may need to either:
+```
+bwa ()
+{
+    /usr/bin/singularity run /apps/biocontainers/images/quay.io_biocontainers_bwa:0.7.17--h5bf99c6_8.sif env LANG=C.UTF-8 bwa "$@"
+}
+```
 
-- Write a custom wrapper script that handles the path check
+```bash frame="none"
+type bwa
+```
+
+```
+bwa is a function
+bwa ()
+{
+    /usr/bin/singularity run /apps/biocontainers/images/quay.io_biocontainers_bwa:0.7.17--h5bf99c6_8.sif env LANG=C.UTF-8 bwa "$@"
+}
+```
+
+For most use cases this does not matter — the function handles everything transparently. However, if a pipeline or workflow checks the executable path (e.g., `which bwa` to verify the installation), it will get the function definition instead of a file path. In that case, you may need to either:
+
+- Write a custom wrapper script that satisfies the pipeline's path check
 - Contact rcac-help@purdue.edu for assistance with pipeline-specific setups
 
 ### The `$BIOC_IMAGE_DIR` environment variable
@@ -131,10 +172,10 @@ echo $BIOC_IMAGE_DIR
 # /apps/biocontainers/images
 ```
 
-You can use this to run containers directly with `apptainer exec` when you need more control (e.g., custom bind mounts, GPU flags, or piping between containerized tools):
+You can use this to run containers directly with `singularity run` or `apptainer exec` when you need more control (e.g., custom bind mounts, GPU flags, or piping between containerized tools):
 
 ```bash frame="none"
-apptainer exec ${BIOC_IMAGE_DIR}/samtools_1.21.sif samtools view -h input.bam
+singularity run ${BIOC_IMAGE_DIR}/quay.io_biocontainers_bwa:0.7.17--h5bf99c6_8.sif bwa mem ref.fa reads.fq
 ```
 
 ### Verifying the installation
@@ -566,7 +607,7 @@ auto_activate_base: false
 
 - **RCAC Bioinformatics Tutorials**: [rcac-bioinformatics.github.io/guide/](https://rcac-bioinformatics.github.io/guide/)
 - **RCAC Knowledge Base**: [www.rcac.purdue.edu/knowledge](https://www.rcac.purdue.edu/knowledge)
-- **Open OnDemand**: [ondemand.rcac.purdue.edu](https://ondemand.rcac.purdue.edu)
+- **Open OnDemand**: [gateway.negishi.rcac.purdue.edu](https://gateway.negishi.rcac.purdue.edu) (replace `negishi` with your cluster name)
 - **Discord**: [discord.gg/zEF2nzhXdC](https://discord.gg/zEF2nzhXdC)
 - **Email**: rcac-help@purdue.edu (include "bioinformatics support" in the subject line)
 
