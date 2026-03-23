@@ -91,6 +91,7 @@ export default defineConfig({
                         { label: 'Project organization', link: '/guide/project-organization' },
                         { label: 'Productivity tips', link: '/guide/productivity-tips' },
                         { label: 'Download SRA data', link: '/guide/sra-download' },
+                        { label: 'Running bioinformatics on RCAC', link: '/guide/running-bioinformatics-on-rcac' },
                     ],
                 },
                 {
