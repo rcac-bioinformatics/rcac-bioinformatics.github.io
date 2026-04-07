@@ -93,6 +93,7 @@ export default defineConfig({
                         { label: 'Download SRA data', link: '/guide/sra-download' },
                         { label: 'HPC orientation for biologists', link: '/guide/hpc-orientation'},
                         { label: 'Running bioinformatics on RCAC', link: '/guide/running-bioinformatics-on-rcac' }
+                        { label: 'QC for Genomics', link: '/guide/qc-for-genomics' }
                     ],
                 },
                 {
