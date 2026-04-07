@@ -43,19 +43,95 @@ The cost of skipping QC is real: wasted compute hours processing bad data, false
 ### Accessing the Cluster
 
 <Tabs>
-  <TabItem label="Open OnDemand (recommended)">
-    <Steps>
-      1. Go to [ondemand.rcac.purdue.edu](https://ondemand.rcac.purdue.edu) and log in with your Purdue credentials.
-      2. Navigate to **Clusters** and select **Negishi Shell Access** (or **Gautschi Shell Access**).
-      3. A terminal session will open in your browser.
-    </Steps>
-  </TabItem>
-  <TabItem label="SSH">
-    ```bash frame="none"
-    ssh boilerid@negishi.rcac.purdue.edu
-    ```
-    Replace `boilerid` with your Purdue username.
-  </TabItem>
+<TabItem label="Open OnDemand">
+
+**Recommended starting point.** Open OnDemand provides a web portal with a file browser, terminal, job submission forms, and interactive apps like JupyterLab and RStudio. No software to install.
+
+<Steps>
+
+1. **Navigate to the OOD portal**
+
+   Go to `https://gateway.<cluster>.rcac.purdue.edu` and log in with your Purdue (BoilerKey) credentials.
+
+   | Cluster | OOD URL |
+   |:--------|:--------|
+   | Gautschi | [gateway.gautschi.rcac.purdue.edu](https://gateway.gautschi.rcac.purdue.edu) |
+   | Negishi | [gateway.negishi.rcac.purdue.edu](https://gateway.negishi.rcac.purdue.edu) |
+   | Bell | [gateway.bell.rcac.purdue.edu](https://gateway.bell.rcac.purdue.edu) |
+   | Gilbreth | [gateway.gilbreth.rcac.purdue.edu](https://gateway.gilbreth.rcac.purdue.edu) |
+
+2. **Tour the dashboard**
+
+   After login you will see the OOD dashboard with these key sections:
+
+   - **Files**: Browse, upload, download, and edit files on the cluster
+   - **Jobs**: View active jobs or use the Job Composer to build submission scripts
+   - **Clusters**: Open a shell terminal (equivalent to SSH) directly in the browser
+   - **Interactive Apps**: Launch JupyterLab, RStudio Server, and other GUI applications
+
+3. **Open a terminal**
+
+   Click **Clusters** in the top menu and select the cluster shell access (e.g., **Gautschi Shell Access**). A terminal opens in your browser. You are now on a **login node**.
+
+</Steps>
+
+<Aside type="tip">
+  OOD is the fastest way to get started because there are no SSH keys to configure. If you are new to HPC, start here.
+</Aside>
+
+</TabItem>
+<TabItem label="SSH">
+
+SSH gives you direct terminal access. It is built into macOS and Linux. On Windows, use PowerShell, WSL, PuTTY, or MobaXterm.
+
+```bash frame="none"
+ssh <boilerid>@gautschi.rcac.purdue.edu
+```
+
+Replace `<boilerid>` with your Purdue career account username. For other clusters, replace `gautschi` with the cluster name.
+
+<Aside type="tip">
+  For password-less login and SSH shortcuts (e.g., `ssh gautschi` instead of the full hostname), see the [SSH Keys and Configuration](/guide/productivity-tips#1-zero-friction-access) section of the Productivity Toolkit.
+</Aside>
+
+</TabItem>
+<TabItem label="ThinLinc">
+
+ThinLinc provides a full Linux desktop environment, ideal for GUI-based tools like IGV, CellProfiler, MEGA, or any application that needs a graphical interface.
+
+<Steps>
+
+1. **Install the ThinLinc client**
+
+   Download and install the ThinLinc client for your operating system from [the ThinLinc download page](https://www.cendio.com/thinlinc/download).
+
+2. **Connect to the cluster**
+
+   Open the ThinLinc client and enter the connection details:
+
+   | Field | Value |
+   |:------|:------|
+   | Server | `desktop.<cluster>.rcac.purdue.edu` |
+   | Username | Your Purdue career account (BoilerID) |
+   | Password | Your Purdue password |
+
+   For example, to connect to Gautschi: `desktop.gautschi.rcac.purdue.edu`
+
+3. **Authenticate**
+
+   After entering your credentials, you will be prompted for Duo two-factor authentication. Approve the push notification or enter the code.
+
+4. **Use the desktop**
+
+   You now have a full Linux desktop. Open a terminal from the Applications menu to run commands, or launch GUI applications directly.
+
+</Steps>
+
+You can also access ThinLinc through a web browser (no client install needed) at `https://desktop.<cluster>.rcac.purdue.edu/`. The native client generally provides a smoother experience.
+
+For detailed ThinLinc documentation, see the [RCAC ThinLinc guide](https://www.rcac.purdue.edu/knowledge/bell/accounts/login/thinlinc).
+
+</TabItem>
 </Tabs>
 
 ### Set Up Your Working Directory
