@@ -33,11 +33,10 @@ curl -s https://get.nextflow.io | bash
 chmod +x nextflow
 echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
 
-# nf-core tools (in a Python venv)
-module load python
-python -m venv $HOME/venvs/nf-core
-source $HOME/venvs/nf-core/bin/activate
-pip install --upgrade pip nf-core
+# nf-core tools (via the conda module — Negishi's system python3 is 3.6, too old)
+module load conda
+conda create -n nf-core -c bioconda -c conda-forge nf-core -y
+conda activate nf-core
 ```
 
 Then copy the [minimal Negishi config](#a-minimal-working-config-for-negishi)
@@ -107,38 +106,39 @@ downloading, linting, and launching nf-core pipelines. It is separate from
 Nextflow itself — you do not strictly need it to run a pipeline, but it makes
 the common tasks much easier.
 
-We recommend installing it into a dedicated Python virtual environment so it
-does not interact with other projects.
+nf-core tools requires **Python 3.8 or newer**. Negishi's system `python3` is
+3.6.8 (too old), but loading the `conda` module gives you conda itself plus a
+recent Python (3.12). Use it to create a dedicated conda environment for
+nf-core tools.
 
 <Steps>
 
-1. **Load a recent Python**
+1. **Load the `conda` module**
 
    ```bash frame="none"
    module --force purge
-   module load python
-   python --version
+   module load conda
    ```
 
-   nf-core tools require Python 3.8 or newer.
-
-2. **Create and activate a virtual environment**
+   Verify that you have a recent Python on `PATH`:
 
    ```bash frame="none"
-   python -m venv $HOME/venvs/nf-core
-   source $HOME/venvs/nf-core/bin/activate
+   python3 --version
    ```
 
-3. **Install `nf-core`**
+2. **Create a dedicated environment for nf-core tools**
 
    ```bash frame="none"
-   pip install --upgrade pip
-   pip install nf-core
+   conda create -n nf-core -c bioconda -c conda-forge nf-core -y
    ```
 
-4. **Verify the installation**
+   This pulls `nf-core` from the bioconda channel and resolves all its
+   Python dependencies in one shot.
+
+3. **Activate the environment and verify**
 
    ```bash frame="none"
+   conda activate nf-core
    nf-core --version
    nf-core pipelines list
    ```
@@ -149,10 +149,21 @@ does not interact with other projects.
 </Steps>
 
 <Aside type="note">
-Whenever you open a new shell to work with nf-core tools, reactivate the
-environment with `source $HOME/venvs/nf-core/bin/activate`. You do **not** need
-the venv active to run a pipeline with `nextflow run nf-core/<pipeline>` — only
-for the `nf-core` CLI itself.
+In a new shell, reload the module and then reactivate the environment:
+`module load conda && conda activate nf-core`. You do **not** need the
+environment active to run a pipeline with `nextflow run nf-core/<pipeline>`
+— only for the `nf-core` tooling itself.
+</Aside>
+
+<Aside type="tip">
+By default, conda writes environments to `$HOME/.conda/envs/`, which can
+quickly exhaust your home quota. Point `envs_dirs` at scratch **before**
+creating the environment:
+
+```bash frame="none"
+mkdir -p $RCAC_SCRATCH/conda_envs
+conda config --add envs_dirs $RCAC_SCRATCH/conda_envs
+```
 </Aside>
 
 ## A minimal working config for Negishi
