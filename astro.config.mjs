@@ -86,7 +86,7 @@ export default defineConfig({
                         { label: 'Transfer data with iRODS', link: '/guide/icommands' },
                         { label: 'Optimizing Trinity', link: '/guide/trinity' },
                         { label: 'VISPR visualization', link: '/guide/vispr' },
-                        { label: 'Nextflow installation', link: '/guide/nextflow' },
+                        { label: 'Nextflow and nf-core', link: '/guide/nextflow' },
                         { label: 'VS Code setup', link: '/guide/vscode' },
                         { label: 'Project organization', link: '/guide/project-organization' },
                         { label: 'Productivity tips', link: '/guide/productivity-tips' },
