@@ -109,7 +109,7 @@ Gautschi provides Nextflow as a module. You do not need to install it yourself. 
    All Nextflow runs must happen on a compute node, not a login node. The Nextflow head process stays alive for the entire pipeline and submits child SLURM jobs on your behalf.
 
    ```bash frame="none"
-   sinteractive -A <your-account> -p cpu -n 2 --mem=8G -t 2:00:00
+   sinteractive -A <your-account> -N 1 -n 2 -p cpu -t 2:00:00
    ```
 
    <Aside type="caution">
@@ -119,8 +119,8 @@ Gautschi provides Nextflow as a module. You do not need to install it yourself. 
 2. **Create the working directory and load Nextflow**
 
    ```bash frame="none"
-   mkdir -p $CLUSTER_SCRATCH/nextflow-workshop
-   cd $CLUSTER_SCRATCH/nextflow-workshop
+   mkdir -p $RCAC_SCRATCH/nextflow-workshop
+   cd $RCAC_SCRATCH/nextflow-workshop
 
    module purge
    module load nextflow/25.10.04
@@ -131,9 +131,9 @@ Gautschi provides Nextflow as a module. You do not need to install it yourself. 
    These tell Nextflow where to store its internal state, task work directories, and cached container images.
 
    ```bash frame="none"
-   export NXF_HOME=$CLUSTER_SCRATCH/nextflow-workshop/.nextflow
-   export NXF_WORK=$CLUSTER_SCRATCH/nextflow-workshop/work
-   export NXF_SINGULARITY_CACHEDIR=$CLUSTER_SCRATCH/nextflow-workshop/singularity-cache
+   export NXF_HOME=$RCAC_SCRATCH/nextflow-workshop/.nextflow
+   export NXF_WORK=$RCAC_SCRATCH/nextflow-workshop/work
+   export NXF_SINGULARITY_CACHEDIR=$RCAC_SCRATCH/nextflow-workshop/singularity-cache
    mkdir -p $NXF_SINGULARITY_CACHEDIR
    ```
 
@@ -149,36 +149,69 @@ Gautschi provides Nextflow as a module. You do not need to install it yourself. 
 If the container cache is already warm (from a previous run or a shared location), pipeline startup is much faster. For this workshop, the instructor has pre-pulled the required images. On your own projects, the first run of a new pipeline will spend several minutes downloading containers.
 </Aside>
 
-## Hands-on 1: nf-core/hello
+## Hands-on 1: running a local hello pipeline
 
-`nf-core/hello` is the smallest nf-core pipeline. It prints greetings in several languages and finishes in under two minutes. We use it here to verify that Nextflow, the `purdue_gautschi` profile, SLURM submission, and Apptainer are all working together.
+Before we use a published nf-core pipeline, we will run the exact code from the section above as a real Nextflow pipeline. This confirms that Nextflow is working and gives you a concrete feel for what happens when you type `nextflow run`.
 
-Run this command from inside your interactive session:
+Create a directory called `hello/` and save the following as `hello/main.nf`:
+
+```groovy title="hello/main.nf"
+params.greeting = "Hello"
+
+process SAY_HELLO {
+    debug true
+
+    input:
+    val(name)
+
+    output:
+    stdout
+
+    script:
+    """
+    echo '${params.greeting}, ${name}!'
+    """
+}
+
+workflow {
+    Channel.of("world", "Nextflow", "nf-core") | SAY_HELLO
+}
+```
+
+Or, if you cloned the workshop repository, the file is already at `rcac-nextflow-demo/hello/main.nf`.
+
+Now run it:
 
 ```bash frame="none"
-nextflow run nf-core/hello \
-    -profile test,purdue_gautschi,singularity \
-    --cluster_account <your-account> \
-    -r 1.0.1
+nextflow run ./hello
 ```
 
-The `-profile` flag takes a comma-separated list:
-- `test` loads built-in test data so you do not need to provide input files.
-- `purdue_gautschi` applies the Gautschi institutional config (SLURM settings, partition, container engine, iGenomes path).
-- `singularity` tells Nextflow to run each process inside an Apptainer/Singularity container.
-
-The `--cluster_account` parameter passes your SLURM allocation to child jobs. The `-r 1.0.1` flag pins the pipeline to a specific release for reproducibility.
-
-While the pipeline runs, Nextflow prints a live progress table showing each process, its status (submitted, running, completed), and the number of tasks. When it finishes, you should see:
+Because `debug true` is set on the process, Nextflow prints each task's stdout directly to your terminal. You should see output like:
 
 ```text frame="none"
--[nf-core/hello] Pipeline completed successfully-
+N E X T F L O W  ~  version 25.10.04
+
+Launching `./hello/main.nf` [friendly_name] DSL2 - revision: ...
+
+executor >  local (3)
+[0f/0ae10a] SAY_HELLO (1) | 3 of 3 ✔
+Hello, world!
+Hello, Nextflow!
+Hello, nf-core!
 ```
 
-{/* Screenshot placeholder: terminal showing nf-core/hello completion output */}
+This ran with the **local executor** (tasks ran as processes on this compute node, not as separate SLURM jobs). That is fine for a 3-task pipeline that takes one second. For real pipelines with dozens of tasks and heavy resource requirements, we use the SLURM executor via an institutional profile. That is what we do next.
 
-<Aside type="note">
-The first time you run any nf-core pipeline, Nextflow pulls the pipeline code from GitHub and downloads container images. On subsequent runs, both are cached locally and startup is nearly instant.
+Try changing the greeting parameter from the command line:
+
+```bash frame="none"
+nextflow run ./hello --greeting "Howdy"
+```
+
+The `params.greeting` value is now "Howdy" and the output reflects it. This is how all Nextflow pipelines accept configuration: parameters defined in the pipeline code can be overridden with `--paramName value` on the command line.
+
+<Aside type="tip">
+Look inside the `work/` directory that just appeared. Even for this trivial pipeline, Nextflow created a hash-named directory for each task containing `.command.sh`, `.command.log`, and `.exitcode`. The structure is identical whether you run locally or via SLURM.
 </Aside>
 
 ## Hands-on 2: nf-core/demo
@@ -398,8 +431,8 @@ If Nextflow prints a warning about minimum nf-core version requirements, check t
 The `work/` directory and container cache can consume significant disk space. Once you have finished inspecting results and saved anything you need:
 
 ```bash frame="none"
-rm -rf $CLUSTER_SCRATCH/nextflow-workshop/work
-rm -rf $CLUSTER_SCRATCH/nextflow-workshop/.nextflow
+rm -rf $RCAC_SCRATCH/nextflow-workshop/work
+rm -rf $RCAC_SCRATCH/nextflow-workshop/.nextflow
 ```
 
 <Aside type="caution">
@@ -409,5 +442,5 @@ Do not delete the container cache (`NXF_SINGULARITY_CACHEDIR`) if you plan to re
 To remove everything including cached images:
 
 ```bash frame="none"
-rm -rf $CLUSTER_SCRATCH/nextflow-workshop
+rm -rf $RCAC_SCRATCH/nextflow-workshop
 ```
