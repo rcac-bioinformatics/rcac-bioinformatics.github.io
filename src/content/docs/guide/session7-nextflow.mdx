@@ -351,10 +351,13 @@ nextflow run nf-core/fetchngs \
     --cluster_account <your-account> \
     -r 1.12.0 \
     --input ids.csv \
+    --download_method sratools \
     --outdir results-fetchngs
 ```
 
 Where `ids.csv` is a single-column CSV with an `id` header and one SRA accession per row.
+
+The `--download_method` parameter controls how FASTQ files are retrieved. Available options are `sratools` (uses `fasterq-dump` from the SRA Toolkit), `aspera` (uses the Aspera high-speed transfer client), and `ftp` (direct FTP download from ENA). The default is `ftp`, which can fail on some HPC networks due to passive-mode FTP restrictions. On Gautschi, use `sratools` for reliable downloads.
 
 <Aside type="caution">
 `fetchngs` depends on the SRA servers being reachable and responsive. If downloads stall during the workshop, this is an SRA issue and not a configuration problem.
