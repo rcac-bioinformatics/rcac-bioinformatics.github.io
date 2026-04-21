@@ -220,11 +220,17 @@ Now that the basic plumbing works, we will run a more realistic pipeline. `nf-co
 
 ```bash frame="none"
 nextflow run nf-core/demo \
-    -profile test,purdue_gautschi,singularity \
+    -profile test,purdue_gautschi \
     --cluster_account <your-account> \
     -r 1.1.0 \
     --outdir results-demo
 ```
+
+The flags:
+- `-profile test,purdue_gautschi` loads built-in test data, the Gautschi institutional config (SLURM executor, partitions, iGenomes), and enables Apptainer containers.
+- `--cluster_account` passes your allocation to SLURM child jobs.
+- `-r 1.1.0` pins the pipeline to a specific release so the same version runs today as six months from now. Without `-r`, Nextflow pulls whatever the latest version is, which can silently break reproducibility.
+- `--outdir` tells the pipeline where to place final results.
 
 While you wait, watch the progress table. You will see tasks for `FASTQC`, `SEQTK_TRIM`, and `MULTIQC` appear and complete. Each task runs as a separate SLURM job.
 
@@ -247,12 +253,17 @@ You should see directories for `fastqc/`, `fq/`, `multiqc/`, and `pipeline_info/
     - SAMPLE2_PE/
     - SAMPLE3_SE/
   - multiqc/
-    - multiqc_report.html
+    - multiqc_plots/
     - multiqc_data/
+    - multiqc_report.html
   - pipeline_info/
-    - execution_report.html
-    - execution_timeline.html
-    - execution_trace.txt
+    - execution_report_2026-04-20_21-06-52.html
+    - execution_timeline_2026-04-20_21-06-52.html
+    - execution_trace_2026-04-20_21-06-52.txt
+    - nf_core_demo_software_mqc_versions.yml
+    - params_2026-04-20_21-06-56.json
+    - pipeline_dag_2026-04-20_21-06-52.html
+
 </FileTree>
 
 The `pipeline_info/` directory contains three files worth examining:
@@ -267,7 +278,7 @@ One of Nextflow's most valuable features is its ability to resume an interrupted
 
 ```bash frame="none"
 nextflow run nf-core/demo \
-    -profile test,purdue_gautschi,singularity \
+    -profile test,purdue_gautschi \
     --cluster_account <your-account> \
     -r 1.1.0 \
     --outdir results-demo \
@@ -336,7 +347,7 @@ If you have time remaining, try `nf-core/fetchngs`. It downloads FASTQ files fro
 
 ```bash frame="none"
 nextflow run nf-core/fetchngs \
-    -profile purdue_gautschi,singularity \
+    -profile purdue_gautschi \
     --cluster_account <your-account> \
     -r 1.12.0 \
     --input ids.csv \
